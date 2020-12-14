@@ -1,6 +1,8 @@
 import { Routes } from '@angular/router';
 
 import { FullComponent } from './layouts/full/full.component';
+import {StarterModule} from './starter/starter.module';
+import {MaterialComponentsModule} from './material-component/material.module';
 
 export const AppRoutes: Routes = [
   {
@@ -14,12 +16,11 @@ export const AppRoutes: Routes = [
       },
       {
         path: 'material',
-        loadChildren:
-          './material-component/material.module#MaterialComponentsModule'
+        loadChildren: () => MaterialComponentsModule
       },
       {
         path: 'starter',
-        loadChildren: './starter/starter.module#StarterModule'
+        loadChildren: () => StarterModule
       }
     ]
   }
