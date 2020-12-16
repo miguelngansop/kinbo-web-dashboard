@@ -1,0 +1,112 @@
+<div fxLayout="row wrap">
+  <!-- column -->
+  <div fxFlex.gt-sm="50" fxFlex.gt-xs="100" fxFlex="100">
+    <mat-card>
+      <div class="box p-20 bg-info text-center">
+        <h1 class="font-light text-white m-0">{{resultsLength}}</h1>
+        <h6 class="text-white m-0">Total artistes</h6>
+      </div>
+    </mat-card>
+  </div>
+  <!-- column -->
+  <!-- column -->
+  <div fxFlex.gt-sm="50" fxFlex.gt-xs="100" fxFlex="100">
+    <mat-card>
+      <div class="box p-20 bg-warning text-center">
+        <h1 class="font-light text-white m-0">{{newArtistsSize}}</h1>
+        <h6 class="text-white m-0">Nouveaux artistes</h6>
+      </div>
+    </mat-card>
+  </div>
+  <!-- column -->
+</div>
+<div fxLayout="row wrap">
+  <div fxFlex="100">
+    <mat-card>
+      <mat-card-content>
+        <div fxLayout="row wrap" class="align-items-center">
+          <div fxFlex.gt-md="25" fxFlex.gt-lg="25" fxFlex="100" >
+            <button mat-raised-button (click)="openDialog('Ajouter',{})" color="primary">Ajouter un artiste</button>
+          </div>
+          <div fxFlex.gt-md="75" fxFlex.gt-lg="75" fxFlex="100" class="text-right">
+            <mat-form-field>
+              <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filtre">
+            </mat-form-field>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+<div fxLayout="row wrap">
+  <div fxFlex="100">
+    <mat-card>
+      <mat-card-content class="example-container">
+        <div *ngIf="isLoadingResults || isRateLimitReached"
+             class="example-loading-shade">
+          <mat-spinner *ngIf="isLoadingResults" [diameter]="50"></mat-spinner>
+          <h3 *ngIf="isRateLimitReached" class="example-rate-limit-reached error-text">
+            <strong>Probleme de connexion ! </strong>
+          </h3>
+        </div>
+        <div *ngIf="!(isLoadingResults || isRateLimitReached) && (resultsLength == 0)" class="example-loading-shade">
+          <div class="example-rate-limit-reached">
+            Aucun artiste disponible !
+          </div>
+        </div>
+        <div class="responsive-table">
+          <mat-table [dataSource]="dataSource" matSort>
+
+
+            <!-- Lastname Column -->
+            <ng-container matColumnDef="nom">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Noms</mat-header-cell>
+              <mat-cell *matCellDef="let row"> {{row.nom}}</mat-cell>
+            </ng-container>
+
+            <!-- Firstname Column -->
+            <ng-container matColumnDef="prenom">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Prenoms </mat-header-cell>
+              <mat-cell *matCellDef="let row"> {{row.prenom}} </mat-cell>
+            </ng-container>
+
+            <!-- Sex Column -->
+            <ng-container matColumnDef="telephone">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Telephone</mat-header-cell>
+              <mat-cell *matCellDef="let row"> {{row.telephone}} </mat-cell>
+            </ng-container>
+
+            <!-- Language Column -->
+            <ng-container matColumnDef="email">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Email</mat-header-cell>
+              <mat-cell *matCellDef="let row"> {{row.email}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="action">
+              <mat-header-cell mat-header-cell *matHeaderCellDef> Action</mat-header-cell>
+              <mat-cell mat-cell *matCellDef="let element">
+                <button mat-icon-button color="primary" [routerLink]="'./'+element.id">
+                  <mat-icon aria-label="Afficher">info</mat-icon>
+                </button>
+                <button mat-icon-button (click)="openDialog('Modifier',element)" >
+                  <mat-icon aria-label="Modifier">create</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" (click)="openDialog('Supprimer',element)">
+                  <mat-icon aria-label="Supprimer">delete</mat-icon>
+                </button>
+              </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;">
+            </mat-row>
+          </mat-table>
+
+          <mat-paginator [pageSizeOptions]="[10, 25, 50, 100]"></mat-paginator>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+
+

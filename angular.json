@@ -33,7 +33,10 @@
               "node_modules/@swimlane/ngx-datatable/release/assets/icons.css",
               "src/assets/styles/style.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "allowedCommonJsDependencies": [
+              "ng2-validation"
+            ]
           },
           "configurations": {
             "production": {

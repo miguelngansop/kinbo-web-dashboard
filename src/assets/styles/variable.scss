@@ -9,7 +9,7 @@ File: scss
 @import url('https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700');
 
 $bodyfont:'Poppins', sans-serif;
-$headingfont:'Poppins', sans-serif; 
+$headingfont:'Poppins', sans-serif;
 
 @import '~@angular/material/theming';
 
@@ -29,14 +29,14 @@ $foreground: map-get($theme, foreground);
 // Dark Theme
 
 /*Theme Colors*/
- 
+
 $topbar: #2196f3;
 $sidebar: #fff;
 $sidebar-white: #e5edef;
 $sidebar-alt:#f2f6f8;
 $bodycolor: #eef5f9;
 $headingtext: #455a64;
-$bodytext: #67757c; 
+$bodytext: #67757c;
 $sidebar-text: #8f999e;
 $sidebar-icons: #99abb4 ;
 
@@ -67,7 +67,7 @@ $light-warning: #fff8ec;
 $light-primary: #f1effd;
 $light-info: #e3f3fd;
 $light-inverse: #f6f6f6;
-$light-megna: #e0f2f4; 
+$light-megna: #e0f2f4;
 
 
 

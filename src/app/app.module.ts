@@ -1,10 +1,10 @@
 import * as $ from 'jquery';
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import {LOCALE_ID, NgModule} from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
-import { AppRoutes } from './app.routing';
+import {AppRoutes, AppRoutingModule} from './app.routing';
 import { AppComponent } from './app.component';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -23,6 +23,12 @@ import { SpinnerComponent } from './shared/spinner.component';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
+import {OAuthModule} from 'angular-oauth2-oidc';
+import {ToastrModule} from 'ngx-toastr';
+import {registerLocaleData} from '@angular/common';
+import localeFrAt from '@angular/common/locales/fr';
+
+registerLocaleData(localeFrAt, 'fr');
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
@@ -50,13 +56,18 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     HttpClientModule,
     SharedModule,
     NgMultiSelectDropDownModule.forRoot(),
-    RouterModule.forRoot(AppRoutes)
+    ToastrModule.forRoot({
+      closeButton: true
+    }),
+    OAuthModule.forRoot(),
+    AppRoutingModule
   ],
   providers: [
     {
       provide: PERFECT_SCROLLBAR_CONFIG,
       useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG
-    }
+    },
+    { provide: LOCALE_ID, useValue: 'fr' }
   ],
   bootstrap: [AppComponent]
 })

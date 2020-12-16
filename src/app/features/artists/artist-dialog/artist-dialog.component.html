@@ -1,0 +1,33 @@
+<h2 mat-dialog-title><strong>{{action}} un artiste</strong></h2>
+<mat-dialog-content  *ngIf="action != 'Supprimer'; else elseTemplate" class="button-container">
+  <form #userForm="ngForm" fxLayout="row wrap" fxFlexAlign="center" class="row"
+        [ngStyle]="{'opacity' : loading ? '30%' : '100%'}">
+    <mat-form-field fxFlex.gt-sm="50" fxFlex="100" class="p-10">
+      <input type="text" matInput required name="nom" [(ngModel)]="local_data.nom" placeholder="Noms">
+    </mat-form-field>
+    <mat-form-field fxFlex.gt-sm="50" fxFlex="100" class="p-10">
+      <input type="text" matInput name="prenom" [(ngModel)]="local_data.prenom" placeholder="Prenoms">
+    </mat-form-field>
+
+    <mat-form-field fxFlex.gt-sm="50" fxFlex="100" class="p-10">
+      <input type="text" matInput name="telephone" [(ngModel)]="local_data.telephone" placeholder="Telephone">
+    </mat-form-field>
+    <mat-form-field fxFlex.gt-sm="50" fxFlex="100" class="p-10">
+      <input type="email" matInput name="email" placeholder="Email" [(ngModel)]="local_data.email">
+    </mat-form-field>
+
+    <app-image-upload style="width: 100%" (file)="image = $event" [fileName]="local_data.imagePersonne"></app-image-upload>
+  </form>
+  <div class="spinner-container" *ngIf="loading">
+    <mat-spinner diameter="50" color="primary"></mat-spinner>
+  </div>
+</mat-dialog-content>
+<ng-template #elseTemplate>
+  Etes vous sûr de vouloir supprimer <b>{{local_data.nom}}</b>?
+</ng-template>
+<div mat-dialog-actions align="end">
+  <button mat-button mat-flat-button color="accent" (click)="doAction()">{{action}}</button>
+  <button mat-button (click)="closeDialog()" mat-flat-button color="warn">Annuler</button>
+</div>
+
+

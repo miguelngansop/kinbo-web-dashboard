@@ -31,11 +31,54 @@ export interface Menu {
 }
 
 const MENUITEMS = [
+
   {
-    state: 'starter',
-    name: 'Starter Page',
+    state: 'dashboard',
+    name: 'Tableau de bord',
     type: 'link',
-    icon: 'content_copy'
+    icon: 'av_timer'
+  },
+  {
+    state: '',
+    name: 'Gestion',
+    type: 'saperator',
+    icon: 'av_timer'
+  },
+  {
+    state: 'artists',
+    name: 'Artistes',
+    type: 'link',
+    icon: 'people'
+  },
+  {
+    state: 'genres',
+    name: 'Genres musicaux',
+    type: 'link',
+    icon: 'note'
+  },
+  {
+    state: 'musics',
+    name: 'Musiques',
+    type: 'link',
+    icon: 'music_note'
+  },
+  {
+    state: 'albums',
+    name: 'Albums',
+    type: 'link',
+    icon: 'library_music'
+  },
+  {
+    state: 'playlists',
+    name: 'Playlists',
+    type: 'link',
+    icon: 'queue_music'
+  },
+  {
+    state: 'diffusion',
+    name: 'Diffusion',
+    type: 'link',
+    icon: 'online_prediction'
   },
   {
     state: 'material',

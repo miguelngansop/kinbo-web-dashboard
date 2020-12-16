@@ -26,6 +26,7 @@ import { PerfectScrollbarConfigInterface, PerfectScrollbarDirective } from 'ngx-
 export class FullComponent implements OnDestroy {
   mobileQuery: MediaQueryList;
   dir = 'ltr';
+  yellow: boolean = true;
   green: boolean;
   blue: boolean;
   dark: boolean;
@@ -40,7 +41,7 @@ export class FullComponent implements OnDestroy {
 
   public config: PerfectScrollbarConfigInterface = {};
   private _mobileQueryListener: () => void;
-    
+
   constructor(
 	public router: Router,
     changeDetectorRef: ChangeDetectorRef,

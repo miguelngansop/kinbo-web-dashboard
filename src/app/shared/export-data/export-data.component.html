@@ -1,0 +1,6 @@
+<button mat-raised-button color="primary" [matMenuTriggerFor]="formats" >Exporter</button>
+<mat-menu #formats="matMenu">
+  <button mat-menu-item (click)="exportToExcelOrCSV('csv')">CSV</button>
+  <button mat-menu-item (click)="exportToExcelOrCSV('xlsx')">EXCEL</button>
+<!--  <button mat-menu-item >PDF</button>-->
+</mat-menu>
