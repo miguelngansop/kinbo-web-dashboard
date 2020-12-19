@@ -1,1 +1,104 @@
-<p>genres works!</p>
+<div fxLayout="row wrap">
+  <!-- column -->
+  <div fxFlex.gt-sm="50" fxFlex.gt-xs="100" fxFlex="100">
+    <mat-card>
+      <div class="box p-20 bg-info text-center">
+        <h1 class="font-light text-white m-0">{{resultsLength}}</h1>
+        <h6 class="text-white m-0">Total genres musicaux</h6>
+      </div>
+    </mat-card>
+  </div>
+  <!-- column -->
+  <!-- column -->
+  <div fxFlex.gt-sm="50" fxFlex.gt-xs="100" fxFlex="100">
+    <mat-card>
+      <div class="box p-20 bg-warning text-center">
+        <h1 class="font-light text-white m-0">{{newGenresSize}}</h1>
+        <h6 class="text-white m-0">Nouveaux genres musicaux</h6>
+      </div>
+    </mat-card>
+  </div>
+  <!-- column -->
+</div>
+<div fxLayout="row wrap">
+  <div fxFlex="100">
+    <mat-card>
+      <mat-card-content>
+        <div fxLayout="row wrap" class="align-items-center">
+          <div fxFlex.gt-md="25" fxFlex.gt-lg="25" fxFlex="100">
+            <button mat-raised-button (click)="openDialog('Ajouter',{})" color="primary">Ajouter un genre musical
+            </button>
+          </div>
+          <div fxFlex.gt-md="75" fxFlex.gt-lg="75" fxFlex="100" class="text-right">
+            <mat-form-field>
+              <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filtre">
+            </mat-form-field>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+<div fxLayout="row wrap">
+  <div fxFlex="100">
+    <mat-card>
+      <mat-card-content class="example-container">
+        <div *ngIf="isLoadingResults || isRateLimitReached"
+             class="example-loading-shade">
+          <mat-spinner *ngIf="isLoadingResults" [diameter]="50"></mat-spinner>
+          <h3 *ngIf="isRateLimitReached" class="example-rate-limit-reached error-text">
+            <strong>Probleme de connexion ! </strong>
+          </h3>
+        </div>
+        <div *ngIf="!(isLoadingResults || isRateLimitReached) && (resultsLength == 0)" class="example-loading-shade">
+          <div class="example-rate-limit-reached">
+            Aucun genre musical disponible !
+          </div>
+        </div>
+        <div class="responsive-table">
+          <mat-table [dataSource]="dataSource" matSort>
+
+            <ng-container matColumnDef="id">
+              <mat-header-cell *matHeaderCellDef>#</mat-header-cell>
+              <mat-cell *matCellDef="let element; let i = index"> {{i + 1}} </mat-cell>
+            </ng-container>
+
+            <!-- Firstname Column -->
+            <ng-container matColumnDef="image">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Image</mat-header-cell>
+              <mat-cell *matCellDef="let row"> {{row.prenom}} </mat-cell>
+            </ng-container>
+
+            <!-- Lastname Column -->
+            <ng-container matColumnDef="name">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Nom</mat-header-cell>
+              <mat-cell *matCellDef="let row"> {{row.nom}}</mat-cell>
+            </ng-container>
+
+
+            <ng-container matColumnDef="action">
+              <mat-header-cell mat-header-cell *matHeaderCellDef> Action</mat-header-cell>
+              <mat-cell mat-cell *matCellDef="let element">
+                <button mat-icon-button color="primary" [routerLink]="'./'+element.id">
+                  <mat-icon aria-label="Afficher">info</mat-icon>
+                </button>
+                <button mat-icon-button (click)="openDialog('Modifier',element)">
+                  <mat-icon aria-label="Modifier">create</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" (click)="openDialog('Supprimer',element)">
+                  <mat-icon aria-label="Supprimer">delete</mat-icon>
+                </button>
+              </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;">
+            </mat-row>
+          </mat-table>
+
+          <mat-paginator [pageSizeOptions]="[10, 25, 50, 100]"></mat-paginator>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

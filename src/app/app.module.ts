@@ -1,7 +1,5 @@
-import * as $ from 'jquery';
 import { BrowserModule } from '@angular/platform-browser';
 import {LOCALE_ID, NgModule} from '@angular/core';
-import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import {AppRoutes, AppRoutingModule} from './app.routing';

@@ -22,9 +22,11 @@ export class ArtistService {
   }
 
   addWithImage(artist: Artist, file: File, hashCode: string) {
-    artist.imagePersonne = hashCode + '.' + file.type.substr(6);
     return this.uploadService.saveFile(file, hashCode).pipe(
-      concatMap(()=> this.http.post(API+'/artistes',artist)
+      concatMap((res: string) => {
+          artist.imagePersonne = res.replace(/"/g, '');
+          return this.http.post(API + '/artistes', artist);
+        }
       ));
   }
 
@@ -37,9 +39,11 @@ export class ArtistService {
   }
 
   updateWithImage(artist: Artist, file: File, hashCode: string) {
-    artist.imagePersonne = hashCode + '.' + file.type.substr(6);
     return this.uploadService.saveFile(file, hashCode).pipe(
-      concatMap(() => this.http.put(API + '/artistes', artist)
+      concatMap((res: string) => {
+          artist.imagePersonne = res.replace(/"/g, '');
+          return this.http.put(API + '/artistes', artist);
+        }
       ));
   }
 

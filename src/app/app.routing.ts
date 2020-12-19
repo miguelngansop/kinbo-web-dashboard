@@ -1,7 +1,5 @@
 import {RouterModule, Routes} from '@angular/router';
-
 import { FullComponent } from './layouts/full/full.component';
-import {StarterModule} from './starter/starter.module';
 import {MaterialComponentsModule} from './material-component/material.module';
 import {NgModule} from '@angular/core';
 import {AuthGuard} from './guards/auth.guard';

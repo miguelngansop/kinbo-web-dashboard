@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import {MusicsComponent} from './musics.component';
+import {MusicCreateComponent} from './music-create/music-create.component';
 
 const routes: Routes = [
   {
@@ -8,6 +9,13 @@ const routes: Routes = [
     component: MusicsComponent,
     data: {
       title: 'Musiques',
+    }
+  },
+  {
+    path: 'create',
+    component: MusicCreateComponent,
+    data: {
+      title: 'Ajouter une musique',
     }
   },
 ];

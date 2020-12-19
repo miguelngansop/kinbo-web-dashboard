@@ -22,30 +22,30 @@ export class LoadImageComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (this.fileName) {
-      this.getImageFromService();
-    }
+    // if (this.fileName) {
+    //   this.getImageFromService();
+    // }
   }
 
-  private getImageFromService() {
-    this.isImageLoading = true;
-    this.uploadService.getFile(this.fileName).subscribe((data) => {
-      this.createImageFromBlob(data);
-    }, err => {
-      this.isImageLoading = false;
-    });
-  }
-
-  private createImageFromBlob(image: Blob) {
-    let reader = new FileReader();
-    reader.addEventListener('load', () => {
-        this.imageToShow = reader.result;
-        this.isImageLoading = false;
-      },
-      false);
-    if (image) {
-      reader.readAsDataURL(image);
-    }
-  }
+  // private getImageFromService() {
+  //   this.isImageLoading = true;
+  //   this.uploadService.getFile(this.fileName).subscribe((data) => {
+  //     this.createImageFromBlob(data);
+  //   }, err => {
+  //     this.isImageLoading = false;
+  //   });
+  // }
+  //
+  // private createImageFromBlob(image: Blob) {
+  //   let reader = new FileReader();
+  //   reader.addEventListener('load', () => {
+  //       this.imageToShow = reader.result;
+  //       this.isImageLoading = false;
+  //     },
+  //     false);
+  //   if (image) {
+  //     reader.readAsDataURL(image);
+  //   }
+  // }
 
 }

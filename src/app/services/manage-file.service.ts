@@ -30,7 +30,7 @@ export class ManageFileService {
   }
 
   getFile(fileName: string): Observable<Blob> {
-    return this.http.get(`${API}/s3/api/files/${fileName}`, {responseType: 'blob'});
+    return this.http.get(`${API}/s3/api/file/${fileName}`, {responseType: 'blob'});
   }
 
   saveFile(file: File, hashCode: string) {

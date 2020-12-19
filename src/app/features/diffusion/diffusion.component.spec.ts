@@ -19,7 +19,7 @@ describe('DiffusionComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should music-create', () => {
     expect(component).toBeTruthy();
   });
 });

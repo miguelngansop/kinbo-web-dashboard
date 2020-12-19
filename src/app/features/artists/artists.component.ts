@@ -39,8 +39,8 @@ export class ArtistsComponent implements OnInit , AfterViewInit {
 
     breakpointObserver.observe(['(max-width: 600px)']).subscribe(result => {
       this.displayedColumns = result.matches ?
-        ['nom', 'prenom', 'email', 'telephone','action'] :
-        ['nom', 'prenom', 'email', 'telephone','action'];
+        ['id', 'nom', 'prenom', 'email', 'telephone', 'action'] :
+        ['id', 'nom', 'prenom', 'email', 'telephone', 'action'];
     });
 
     // Assign the data to the data source for the table to render

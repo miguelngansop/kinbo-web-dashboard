@@ -20,7 +20,7 @@ const routes: Routes = [
         path: '',
         component: ArtistDetailsComponent,
         resolve: {
-          customer: ArtistResolver
+          artist: ArtistResolver
         },
         data: {
           title: "Details sur l'artiste",

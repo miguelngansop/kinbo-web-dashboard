@@ -1,21 +1,22 @@
 <div fxLayout="column" fxLayoutAlign="center center">
   <!--  <div fxFlex.gt-sm="25" fxFlex.gt-xs="100" fxFlex="100">-->
-  <div> {{title}}</div>
+  <div>{{title}}</div>
 
-    <!--      <input type="file" ng2FileSelect [uploader]="uploader" class="custom-file-input">-->
-    <!--      <span class="custom-file-control"></span>-->
+  <!--      <input type="file" ng2FileSelect [uploader]="uploader" class="custom-file-input">-->
+  <!--      <span class="custom-file-control"></span>-->
 
-    <input #file (change)="preview(file.files)" accept="image/*" name="photo" style="display: block"
-           placeholder="Photo" type="file">
+  <input #file (change)="preview(file.files)" accept="image/*" name="photo" style="display: block"
+         placeholder="Image" type="file">
 
-      <img *ngIf="fileUpload.url; else currentImage" [src]="fileUpload.url" height="300" style="border-radius: 50%" width="100"
-           alt="avatar">
+  <img *ngIf="fileUpload.url; else currentImage" [src]="fileUpload.url" height="500"
+       width="200"
+       alt="avatar">
 
-      <ng-template #currentImage>
-          <app-load-image *ngIf="fileName" [fileName]="fileName" [isRounded]="true" height="300" width="100"></app-load-image>
-      </ng-template>
+  <ng-template #currentImage>
+    <app-load-image *ngIf="fileName" [fileName]="fileName" [isRounded]="true" height="400" width="100"></app-load-image>
+  </ng-template>
 
-    <span *ngIf="message">{{message}}</span>
+  <span *ngIf="message" class="text-danger">{{message}}</span>
 
 
   <!--  </div>-->

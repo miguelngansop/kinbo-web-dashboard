@@ -1,0 +1,79 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Nouvelle musique</mat-card-title>
+  </mat-card-header>
+  <form class="button-container" [formGroup]="form" (ngSubmit)="onSave()"
+        [ngStyle]="{'opacity' : loading ? '30%' : '100%'}">
+    <mat-card-content fxLayout="row wrap" fxFlexAlign="center">
+      <mat-form-field fxFlex.gt-sm="100" fxFlex="100" class="p-10">
+        <input type="text" matInput required name="nom" formControlName="nom" placeholder="Titre">
+      </mat-form-field>
+
+      <mat-form-field fxFlex.gt-sm="50" fxFlex="100" class="p-10">
+        <mat-select [formControl]="artistServerSideCtrl" placeholder="Artiste" formControlName="artist" ngDefaultControl
+                    required>
+          <mat-option>
+            <ngx-mat-select-search placeholderLabel="Recherher un artiste ..."
+                                   noEntriesFoundLabel="Aucun artiste correspondant"
+                                   [formControl]="artistServerSideFilteringCtrl"
+                                   [searching]="searchingArtist"></ngx-mat-select-search>
+          </mat-option>
+          <mat-option *ngFor="let artist of filteredServerSideArtists | async" [value]="artist">
+            {{artist.nom + ' ' + artist.prenom}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field fxFlex.gt-sm="50" fxFlex="100" class="p-10">
+        <mat-select [formControl]="genreServerSideCtrl" placeholder="Genre" formControlName="genre" ngDefaultControl
+                    required>
+          <mat-option>
+            <ngx-mat-select-search placeholderLabel="Recherher un genre ..."
+                                   noEntriesFoundLabel="Aucun genre correspondant"
+                                   [formControl]="genreServerSideFilteringCtrl"
+                                   [searching]="searchingGenre"></ngx-mat-select-search>
+          </mat-option>
+          <mat-option *ngFor="let genre of filteredServerSideGenres | async" [value]="genre">
+            {{genre.nom}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <app-image-upload style="width: 100%" (file)="image = $event" [fileName]="music.image"
+                        title="Cover"></app-image-upload>
+
+      <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" style="padding: 10px;">
+        <h4>Medias</h4>
+
+        <div class="m-t-30">Audio</div>
+        <label class="custom-file">
+          <input #audioFile type="file" accept="audio/*" name="audio" (change)="onAudioChange(audioFile.files)">
+          <span *ngIf="audioMessage" class="text-danger m-l-10">{{audioMessage}}</span>
+        </label>
+
+        <div class="m-t-30">Video</div>
+        <label class="custom-file">
+          <input #videoFile type="file" accept="video/*" name="video" (change)="onVideoChange(videoFile.files)">
+          <span *ngIf="videoMessage" class="text-danger m-l-10">{{videoMessage}}</span>
+        </label>
+
+        <div class="m-t-30">Lyrics</div>
+        <quill-editor formControlName="lyrics" name="lyrics" placeholder="Lyrics"
+                      [style]="{height: '200px',  width: '100%' , display:'block' , padding:'10px'}" format="text"
+                      theme="snow"></quill-editor>
+
+      </div>
+
+      <div class="spinner-container" *ngIf="loading">
+        <mat-spinner diameter="50" color="primary"></mat-spinner>
+      </div>
+    </mat-card-content>
+    <mat-card-actions align="center" style="padding: 20px;">
+      <button mat-button mat-flat-button color="accent" type="submit"
+              [disabled]="!(form.valid && image.file && audio.file)">Valider
+      </button>
+      <button mat-button mat-flat-button color="warn" routerLink="/musics">Annuler</button>
+    </mat-card-actions>
+  </form>
+</mat-card>
+

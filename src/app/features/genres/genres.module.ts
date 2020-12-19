@@ -1,15 +1,23 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
 
-import { GenresRoutingModule } from './genres-routing.module';
-import { GenresComponent } from './genres.component';
+import {GenresRoutingModule} from './genres-routing.module';
+import {GenresComponent} from './genres.component';
+import {DemoMaterialModule} from '../../demo-material-module';
+import {GenreDialogComponent} from './genre-dialog/genre-dialog.component';
+import {SharedModule} from '../../shared/shared.module';
+import {FormsModule} from '@angular/forms';
 
 
 @NgModule({
-  declarations: [GenresComponent],
+  declarations: [GenresComponent, GenreDialogComponent],
   imports: [
     CommonModule,
-    GenresRoutingModule
-  ]
+    DemoMaterialModule,
+    SharedModule,
+    GenresRoutingModule,
+    FormsModule
+  ],
+  entryComponents: [GenreDialogComponent]
 })
 export class GenresModule { }

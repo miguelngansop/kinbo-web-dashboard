@@ -57,6 +57,10 @@
         <div class="responsive-table">
           <mat-table [dataSource]="dataSource" matSort>
 
+            <ng-container matColumnDef="id">
+              <mat-header-cell *matHeaderCellDef>#</mat-header-cell>
+              <mat-cell *matCellDef="let element; let i = index"> {{i + 1}} </mat-cell>
+            </ng-container>
 
             <!-- Lastname Column -->
             <ng-container matColumnDef="nom">
@@ -66,7 +70,7 @@
 
             <!-- Firstname Column -->
             <ng-container matColumnDef="prenom">
-              <mat-header-cell *matHeaderCellDef mat-sort-header> Prenoms </mat-header-cell>
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Prenoms</mat-header-cell>
               <mat-cell *matCellDef="let row"> {{row.prenom}} </mat-cell>
             </ng-container>
 

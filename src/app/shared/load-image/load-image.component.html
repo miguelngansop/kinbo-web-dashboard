@@ -2,12 +2,12 @@
 <!--  <div class="spinner-container" *ngIf="isImageLoading">-->
 <!--     <mat-progress-spinner [diameter]="35" mode="indeterminate" color="warn"></mat-progress-spinner>-->
 <!--  </div>-->
-  <img *ngIf="!isImageLoading && imageToShow ; else noImage" [height]="height"
-       [src]="sanitizer.bypassSecurityTrustResourceUrl(imageToShow)" [ngClass]="class"
-       [style.border-radius.%]="isRounded ? 50 : 0 " [width]="width" alt=""/>
-  <ng-template #noImage>
-    <img [height]="height" [style.border-radius.%]="isRounded ? 50 : 0 " [width]="width" alt="" [ngClass]="class"
-         src="assets/images/users/4.jpg"/>
-  </ng-template>
+<img [height]="height"
+     [src]="fileName ? fileName : 'assets/images/users/4.jpg'" [ngClass]="class"
+     [style.border-radius.%]="isRounded ? 50 : 0 " [width]="width" alt=""/>
+<!--  <ng-template #noImage>-->
+<!--    <img [height]="height" [style.border-radius.%]="isRounded ? 50 : 0 " [width]="width" alt="" [ngClass]="class"-->
+<!--         src="assets/images/users/4.jpg"/>-->
+<!--  </ng-template>-->
 <!--</div>-->
 
