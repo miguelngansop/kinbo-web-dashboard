@@ -50,7 +50,7 @@ export class MusicCreateComponent implements OnInit, OnDestroy {
       'album': [null],
       'dateCreation': [null, Validators.required],
       'prix': [0, Validators.required],
-      'lyrics': ['']
+      'lyric': ['']
     });
   }
 

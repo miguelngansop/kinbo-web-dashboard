@@ -11,6 +11,6 @@ export class Music {
   videoURL: string;
   dateCreation: string;
   image: string;
-  lyrics: string;
+  lyric: string;
   genre: Genre;
 }

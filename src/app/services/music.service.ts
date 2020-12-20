@@ -25,12 +25,12 @@ export class MusicService {
   addWithDetails(music: Music, image: File, imageHashCode: string, audio: File, audioHashCode: string, video: File, videoHashCode: string) {
     let sources = [this.uploadService.saveFile(image, imageHashCode), this.uploadService.saveFile(audio, audioHashCode)];
     if (video) {
-      sources.concat(this.uploadService.saveFile(video, videoHashCode));
+      sources.push(this.uploadService.saveFile(video, videoHashCode));
     }
 
     return forkJoin(sources).pipe(
       concatMap((resp) => {
-          music.image = (<string>resp[0]).replace(/"/g, '');
+        music.image = (<string>resp[0]).replace(/"/g, '');
         music.audioURL = (<string>resp[1]).replace(/"/g, '');
           if (video) {
             music.videoURL = (<string>resp[2]).replace(/"/g, '');
