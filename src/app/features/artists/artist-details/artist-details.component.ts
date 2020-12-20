@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {Artist} from '../../../models/artist';
 import {MatPaginator} from '@angular/material/paginator';
-import {MatTable, MatTableDataSource} from '@angular/material/table';
+import {MatTableDataSource} from '@angular/material/table';
 import {MatSort} from '@angular/material/sort';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatDialog} from '@angular/material/dialog';
@@ -11,6 +11,7 @@ import {BreakpointObserver} from '@angular/cdk/layout';
 import {merge} from 'rxjs';
 import {catchError, map, startWith, switchMap} from 'rxjs/operators';
 import {of} from 'rxjs/internal/observable/of';
+import {Music} from '../../../models/music';
 
 class Album {
 }
@@ -23,15 +24,26 @@ class Album {
 export class ArtistDetailsComponent implements OnInit, AfterViewInit {
 
   artist: Artist;
-  displayedColumns: any = [];
-  dataSource: any = [];
-  resultsLength = 0;
-  isLoadingResults = true;
-  isRateLimitReached = false;
+  albumsDisplayedColumns: any = [];
+  musicsDisplayedColumns: any = [];
 
-  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
-  @ViewChild(MatSort, {static: true}) sort: MatSort;
-  @ViewChild(MatTable, {static: true}) table: MatTable<Album>;
+  albumsDataSource: MatTableDataSource<Album>;
+  musicsDataSource: MatTableDataSource<Music>;
+
+  albumsLength = 0;
+  musicsLength = 0;
+
+  isLoadingAlbumsResults = true;
+  isRateLimitAlbumsReached = false;
+
+  isLoadingMusicsResults = true;
+  isRateLimitMusicsReached = false;
+
+  @ViewChild('albumPaginator', {static: true}) albumPaginator: MatPaginator;
+  @ViewChild('albumsSort', {static: true}) albumSort: MatSort;
+
+  @ViewChild('musicPaginator', {static: true}) musicPaginator: MatPaginator;
+  @ViewChild('musicsSort', {static: true}) musicSort: MatSort;
 
 
   constructor(private router: Router, private route: ActivatedRoute, private artistService: ArtistService, breakpointObserver: BreakpointObserver,
@@ -41,44 +53,81 @@ export class ArtistDetailsComponent implements OnInit, AfterViewInit {
     });
 
     breakpointObserver.observe(['(max-width: 600px)']).subscribe(result => {
-      this.displayedColumns = result.matches ?
+      this.albumsDisplayedColumns = result.matches ?
         ['cover', 'title', 'date', 'action'] :
         ['cover', 'title', 'date', 'action'];
     });
 
-    this.dataSource = new MatTableDataSource();
+    breakpointObserver.observe(['(max-width: 600px)']).subscribe(result => {
+      this.musicsDisplayedColumns = result.matches ?
+        ['id', 'cover', 'name', 'album', 'genre', 'price', 'date', 'action'] :
+        ['id', 'cover', 'name', 'album', 'genre', 'price', 'date', 'action'];
+    });
+
+    this.albumsDataSource = new MatTableDataSource();
+    this.musicsDataSource = new MatTableDataSource();
   }
 
   ngOnInit() {
   }
 
   ngAfterViewInit() {
-    this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
-    merge(this.sort.sortChange, this.paginator.page)
+    //Albums
+    this.albumSort.sortChange.subscribe(() => this.albumPaginator.pageIndex = 0);
+    merge(this.albumSort.sortChange, this.albumPaginator.page)
       .pipe(
         startWith({}),
         switchMap(() => {
-          this.isLoadingResults = true;
-          return []; //this.artistService.getAlbums(this.artist.userId);
+          this.isLoadingAlbumsResults = true;
+          return this.artistService.getAlbums(this.artist.id);
         }),
         map((data: Album[]) => {
           // Flip flag to show that loading has finished.
-          this.isLoadingResults = false;
-          this.isRateLimitReached = false;
-          this.resultsLength = data.length;
+          this.isLoadingAlbumsResults = false;
+          this.isRateLimitAlbumsReached = false;
+          this.albumsLength = data.length;
           return data;
         }),
         catchError(() => {
-          this.isLoadingResults = false;
+          this.isLoadingAlbumsResults = false;
           // Catch if the API has reached its rate limit. Return empty data.
-          this.isRateLimitReached = true;
+          this.isRateLimitAlbumsReached = true;
           // alert(err);
           return of([]);
         })
-      ).subscribe(data => this.dataSource.data = data);
+      ).subscribe(data => this.albumsDataSource.data = data);
 
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+    this.albumsDataSource.paginator = this.albumPaginator;
+    this.albumsDataSource.sort = this.albumSort;
+
+    //Music
+    this.musicSort.sortChange.subscribe(() => this.musicPaginator.pageIndex = 0);
+    merge(this.musicSort.sortChange, this.musicPaginator.page)
+      .pipe(
+        startWith({}),
+        switchMap(() => {
+          this.isLoadingMusicsResults = true;
+          return this.artistService.getMusics(this.artist.id);
+        }),
+        map((data: Music[]) => {
+          // Flip flag to show that loading has finished.
+          this.isLoadingMusicsResults = false;
+          this.isRateLimitMusicsReached = false;
+          this.musicsLength = data.length;
+          console.log('musics', data);
+          return data;
+        }),
+        catchError(() => {
+          this.isLoadingMusicsResults = false;
+          // Catch if the API has reached its rate limit. Return empty data.
+          this.isRateLimitMusicsReached = true;
+          // alert(err);
+          return of([]);
+        })
+      ).subscribe(data => this.musicsDataSource.data = data);
+
+    this.musicsDataSource.paginator = this.musicPaginator;
+    this.musicsDataSource.sort = this.musicSort;
   }
 
   openDialog(action, obj) {

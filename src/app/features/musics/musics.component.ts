@@ -38,8 +38,8 @@ export class MusicsComponent implements OnInit, AfterViewInit {
 
     breakpointObserver.observe(['(max-width: 600px)']).subscribe(result => {
       this.displayedColumns = result.matches ?
-        ['id', 'name', 'artist', 'genre', 'price', 'date', 'action'] :
-        ['id', 'name', 'artist', 'genre', 'price', 'date', 'action'];
+        ['id', 'cover', 'name', 'artist', 'genre', 'price', 'date', 'action'] :
+        ['id', 'cover', 'name', 'artist', 'genre', 'price', 'date', 'action'];
     });
 
     // Assign the data to the data source for the table to render
@@ -66,8 +66,6 @@ export class MusicsComponent implements OnInit, AfterViewInit {
           this.resultsLength = data.length;
           // this.newUsersSize = data.filter(value => new Date(value.userCreatedAt).getFullYear() === new Date().getFullYear()).length ;
           this.newMusicsSize = 0; //data.filter(value => new Date(value.userCreatedAt).getMonth() === new Date().getMonth()).length;
-
-          console.log('Musics', data);
           return data;
         }),
         catchError(() => {

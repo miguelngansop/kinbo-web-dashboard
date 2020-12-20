@@ -21,6 +21,18 @@ export class ArtistService {
     return this.http.get(API + '/artistes/all');
   }
 
+  searchByName(name: string) {
+    return this.http.get(API + `/artistes/recherche/${name}`);
+  }
+
+  getAlbums(id: string) {
+    return this.http.get(API + `/albums/artiste/${id}`);
+  }
+
+  getMusics(id: string) {
+    return this.http.get(API + `/musiques/artiste/${id}`);
+  }
+
   addWithImage(artist: Artist, file: File, hashCode: string) {
     return this.uploadService.saveFile(file, hashCode).pipe(
       concatMap((res: string) => {

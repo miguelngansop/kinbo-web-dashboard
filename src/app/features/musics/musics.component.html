@@ -62,7 +62,14 @@
               <mat-cell *matCellDef="let element; let i = index"> {{i + 1}} </mat-cell>
             </ng-container>
 
-            <!-- Lastname Column -->
+            <ng-container matColumnDef="cover">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Cover</mat-header-cell>
+              <mat-cell *matCellDef="let row">
+                <span class="header-label">cover:</span>
+                <img src="{{row.image ? row.image : 'assets/images/logo.png' }}" class="img-circle" width="60"/>
+              </mat-cell>
+            </ng-container>
+
             <ng-container matColumnDef="name">
               <mat-header-cell *matHeaderCellDef mat-sort-header> Nom</mat-header-cell>
               <mat-cell *matCellDef="let row"> {{row.nom}}</mat-cell>
@@ -71,12 +78,13 @@
 
             <ng-container matColumnDef="artist">
               <mat-header-cell *matHeaderCellDef mat-sort-header> Artist</mat-header-cell>
-              <mat-cell *matCellDef="let row"> {{row.prenom}} </mat-cell>
+              <mat-cell
+                *matCellDef="let row"> {{row.artiste ? row.artiste.nom + ' ' + row.artiste.prenom : 'n/a'}} </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="genre">
               <mat-header-cell *matHeaderCellDef mat-sort-header> Genre</mat-header-cell>
-              <mat-cell *matCellDef="let row"> {{row.prix}} </mat-cell>
+              <mat-cell *matCellDef="let row"> {{row.genre ? row.genre.nom : 'n/a'}} </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="price">
@@ -87,7 +95,7 @@
 
             <ng-container matColumnDef="date">
               <mat-header-cell *matHeaderCellDef mat-sort-header>Date de sortie</mat-header-cell>
-              <mat-cell *matCellDef="let row"> {{row.prix}} </mat-cell>
+              <mat-cell *matCellDef="let row"> {{row.dateCreation | date:'longDate'}} </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="action">

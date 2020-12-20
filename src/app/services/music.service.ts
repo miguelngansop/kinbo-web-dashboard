@@ -31,9 +31,9 @@ export class MusicService {
     return forkJoin(sources).pipe(
       concatMap((resp) => {
           music.image = (<string>resp[0]).replace(/"/g, '');
-          music.audiourl = (<string>resp[1]).replace(/"/g, '');
+        music.audioURL = (<string>resp[1]).replace(/"/g, '');
           if (video) {
-            music.videourl = (<string>resp[2]).replace(/"/g, '');
+            music.videoURL = (<string>resp[2]).replace(/"/g, '');
           }
           return this.http.post(API + '/musiques', music);
         }
@@ -49,8 +49,8 @@ export class MusicService {
   }
 
   updateWithImage(music: Music, audio: File, audioHashCode: string, video: File, videoHashCode: string) {
-    music.audiourl = audioHashCode + '.' + audio.type.substr(6);
-    music.videourl = videoHashCode + '.' + video.type.substr(6);
+    music.audioURL = audioHashCode + '.' + audio.type.substr(6);
+    music.videoURL = videoHashCode + '.' + video.type.substr(6);
     return merge(this.uploadService.saveFile(audio, audioHashCode), this.uploadService.saveFile(video, videoHashCode)).pipe(
       concatMap(() => this.http.put(API + '/musiques', music)
       ));

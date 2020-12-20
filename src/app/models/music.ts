@@ -7,9 +7,8 @@ export class Music {
   artiste: Artist;
   playlists;
   prix: number;
-  audiourl: string;
-  videourl: string;
-  typeMedia: string;
+  audioURL: string;
+  videoURL: string;
   dateCreation: string;
   image: string;
   lyrics: string;

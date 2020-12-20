@@ -66,7 +66,10 @@
             <!-- Firstname Column -->
             <ng-container matColumnDef="image">
               <mat-header-cell *matHeaderCellDef mat-sort-header> Image</mat-header-cell>
-              <mat-cell *matCellDef="let row"> {{row.prenom}} </mat-cell>
+              <mat-cell *matCellDef="let row">
+                <span class="header-label">cover:</span>
+                <img src="{{row.image ? row.image : 'assets/images/logo.png' }}" class="img-circle" width="60"/>
+              </mat-cell>
             </ng-container>
 
             <!-- Lastname Column -->
