@@ -82,7 +82,7 @@
             <ng-container matColumnDef="action">
               <mat-header-cell mat-header-cell *matHeaderCellDef> Action</mat-header-cell>
               <mat-cell mat-cell *matCellDef="let element">
-                <button mat-icon-button color="primary" [routerLink]="'./'+element.id">
+                <button mat-icon-button color="primary" (click)="openDialog('Details',element)">
                   <mat-icon aria-label="Afficher">info</mat-icon>
                 </button>
                 <button mat-icon-button (click)="openDialog('Modifier',element)">

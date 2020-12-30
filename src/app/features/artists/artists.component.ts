@@ -21,7 +21,7 @@ import {ArtistDialogComponent} from './artist-dialog/artist-dialog.component';
 })
 export class ArtistsComponent implements OnInit , AfterViewInit {
 
-  displayedColumns = ['matricule', 'lastname', 'firstname', 'sex', 'language', 'action'];
+  displayedColumns = [];
   dataSource: MatTableDataSource<Artist>;
 
   newArtistsSize: number = 0;

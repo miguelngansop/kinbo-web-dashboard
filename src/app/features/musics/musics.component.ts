@@ -20,7 +20,7 @@ import {MusicDialogComponent} from './music-dialog/music-dialog.component';
 })
 export class MusicsComponent implements OnInit, AfterViewInit {
 
-  displayedColumns = ['matricule', 'lastname', 'firstname', 'sex', 'language', 'action'];
+  displayedColumns = [];
   dataSource: MatTableDataSource<Music>;
 
   newMusicsSize: number = 0;

@@ -21,6 +21,10 @@ export class GenreService {
     return this.http.get(API + '/genres/all');
   }
 
+  searchByName(name: string) {
+    return this.http.get(API + `/genres/recherche/${name}`);
+  }
+
   addWithImage(genre: Genre, file: File, hashCode: string) {
     return this.uploadService.saveFile(file, hashCode).pipe(
       concatMap((res: string) => {

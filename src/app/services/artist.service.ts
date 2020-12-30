@@ -17,6 +17,10 @@ export class ArtistService {
     return this.http.get(`${API}/artistes/${id}`);
   }
 
+  count() {
+    return this.http.get(`${API}/artistes/count`);
+  }
+
   getAll() {
     return this.http.get(API + '/artistes/all');
   }
@@ -31,6 +35,10 @@ export class ArtistService {
 
   getMusics(id: string) {
     return this.http.get(API + `/musiques/artiste/${id}`);
+  }
+
+  getNoAlbumMusics(id: string) {
+    return this.http.get(`${API}/musiques/artiste/${id}/no-album`);
   }
 
   addWithImage(artist: Artist, file: File, hashCode: string) {
@@ -58,6 +66,5 @@ export class ArtistService {
         }
       ));
   }
-
 
 }

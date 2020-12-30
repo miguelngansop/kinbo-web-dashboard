@@ -56,9 +56,7 @@ export class ArtistDetailsComponent implements OnInit, AfterViewInit {
       this.albumsDisplayedColumns = result.matches ?
         ['cover', 'title', 'date', 'action'] :
         ['cover', 'title', 'date', 'action'];
-    });
 
-    breakpointObserver.observe(['(max-width: 600px)']).subscribe(result => {
       this.musicsDisplayedColumns = result.matches ?
         ['id', 'cover', 'name', 'album', 'genre', 'price', 'date', 'action'] :
         ['id', 'cover', 'name', 'album', 'genre', 'price', 'date', 'action'];
@@ -114,7 +112,6 @@ export class ArtistDetailsComponent implements OnInit, AfterViewInit {
           this.isLoadingMusicsResults = false;
           this.isRateLimitMusicsReached = false;
           this.musicsLength = data.length;
-          console.log('musics', data);
           return data;
         }),
         catchError(() => {

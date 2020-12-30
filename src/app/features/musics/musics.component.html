@@ -104,7 +104,7 @@
                 <button mat-icon-button color="primary" [routerLink]="'./'+element.id">
                   <mat-icon aria-label="Afficher">info</mat-icon>
                 </button>
-                <button mat-icon-button (click)="openDialog('Modifier',element)">
+                <button mat-icon-button [routerLink]="'./'+element.id+'/edit'">
                   <mat-icon aria-label="Modifier">create</mat-icon>
                 </button>
                 <button mat-icon-button color="warn" (click)="openDialog('Supprimer',element)">

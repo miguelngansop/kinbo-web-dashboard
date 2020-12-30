@@ -20,7 +20,7 @@ import {GenreService} from '../../services/genre.service';
 })
 export class GenresComponent implements OnInit {
 
-  displayedColumns = ['matricule', 'lastname', 'firstname', 'sex', 'language', 'action'];
+  displayedColumns = [];
   dataSource: MatTableDataSource<Genre>;
 
   newGenresSize: number = 0;

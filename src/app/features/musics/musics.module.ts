@@ -14,7 +14,7 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {NgxMatSelectSearchModule} from 'ngx-mat-select-search';
 import {MusicDetailsComponent} from './music-details/music-details.component';
-
+import {PlyrModule} from 'ngx-plyr';
 
 @NgModule({
   declarations: [MusicsComponent, MusicCreateComponent, MusicDialogComponent, MusicDetailsComponent],
@@ -29,7 +29,8 @@ import {MusicDetailsComponent} from './music-details/music-details.component';
     MatSelectModule,
     MatFormFieldModule,
     NgxMatSelectSearchModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    PlyrModule
   ]
 })
 export class MusicsModule { }

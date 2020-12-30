@@ -19,37 +19,41 @@ export class UserService {
   constructor(private http: HttpClient, private uploadService: ManageFileService) {
   }
 
+  count() {
+    return this.http.get(`${API}/users/count`);
+  }
+
   get(id: string) {
-    return this.http.get(`${API}/api/agents/${id}`);
+    return this.http.get(`${API}/api/users/${id}`);
   }
 
   getAll() {
-    return this.http.get(API + '/api/agents');
+    return this.http.get(API + '/users/all');
   }
 
   getAllRoles() {
-    return this.http.get(API + '/api/roles');
+    return this.http.get(API + '/roles');
   }
 
-  addWithImage(agent: User, file: File, hashCode: string) {
-    agent.userAvatar = hashCode + '.' + file.type.substr(6);
+  addWithImage(user: User, file: File, hashCode: string) {
+    user.userAvatar = hashCode + '.' + file.type.substr(6);
     return this.uploadService.saveFile(file, hashCode).pipe(
-      concatMap(()=> this.http.post(API+'/api/agents',agent)
+      concatMap(() => this.http.post(API + '/api/users', user)
       ));
   }
 
-  add(agent : User){
-    return this.http.post(API+'/api/agents',agent);
+  add(user: User) {
+    return this.http.post(API + '/users', user);
   }
 
-  update(agent: User) {
-    return this.http.put(API + '/api/agents', agent);
+  update(user: User) {
+    return this.http.put(API + '/users', user);
   }
 
-  updateWithImage(agent: User, file: File, hashCode: string) {
-    agent.userAvatar = hashCode + '.' + file.type.substr(6);
+  updateWithImage(user: User, file: File, hashCode: string) {
+    user.userAvatar = hashCode + '.' + file.type.substr(6);
     return this.uploadService.saveFile(file, hashCode).pipe(
-      concatMap(() => this.http.put(API + '/api/agents', agent)
+      concatMap(() => this.http.put(API + '/users', user)
       ));
   }
 
@@ -58,6 +62,6 @@ export class UserService {
   }
 
   updatePassword(data: ResetPassword) {
-    return this.http.put(API + '/api/agents/password', data);
+    return this.http.put(API + '/users/password', data);
   }
 }

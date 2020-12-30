@@ -1,0 +1,44 @@
+<h2 mat-dialog-title><strong>{{action}} un album</strong></h2>
+<mat-dialog-content *ngIf="action != 'Supprimer'; else elseTemplate" class="button-container">
+  <form [formGroup]="form" fxLayout="row wrap" fxFlexAlign="center" class="row"
+        [ngStyle]="{'opacity' : loading ? '30%' : '100%'}">
+    <mat-form-field fxFlex.gt-sm="50" fxFlex="100" class="p-10">
+      <input type="text" matInput required formControlName="titre" placeholder="Titre">
+    </mat-form-field>
+
+    <mat-form-field fxFlex.gt-sm="50" fxFlex="100" class="p-10">
+      <mat-select [formControl]="artistServerSideCtrl" placeholder="Artiste" formControlName="artiste"
+                  ngDefaultControl required #artistSelect>
+        <mat-option>
+          <ngx-mat-select-search placeholderLabel="Recherher un artiste ..."
+                                 noEntriesFoundLabel="Aucun artiste correspondant"
+                                 [formControl]="artistServerSideFilteringCtrl"
+                                 [searching]="searchingArtist"></ngx-mat-select-search>
+        </mat-option>
+        <mat-option *ngFor="let artist of filteredServerSideArtists | async" [value]="artist">
+          {{artist.nom + ' ' + artist.prenom}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field fxFlex.gt-sm="50" fxFlex="100" class="p-10">
+      <mat-label>Date de sortie</mat-label>
+      <input matInput [max]="maxDate" [matDatepicker]="picker" required formControlName="dateCreation">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+    <app-image-upload style="width: 100%" title="Cover" (file)="image = $event"
+                      [fileName]="local_data.image"></app-image-upload>
+  </form>
+  <div class="spinner-container" *ngIf="loading">
+    <mat-spinner diameter="50" color="primary"></mat-spinner>
+  </div>
+</mat-dialog-content>
+<ng-template #elseTemplate>
+  Etes vous sûr de vouloir supprimer <b>{{local_data.titre}}</b> ?
+</ng-template>
+<div mat-dialog-actions align="end">
+  <button mat-button mat-flat-button color="accent" type="submit" (click)="doAction()">{{action}}</button>
+  <button mat-button (click)="closeDialog()" mat-flat-button color="warn">Annuler</button>
+</div>
