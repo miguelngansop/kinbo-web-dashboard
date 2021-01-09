@@ -11,6 +11,7 @@ export class Music {
   prix: number;
   audioURL: string;
   videoURL: string;
+  streamURL: string;
   dateCreation: string;
   image: string;
   lyric: string;
