@@ -56,7 +56,9 @@ export class AlbumDialogComponent implements OnInit, OnDestroy {
     this.action = data.action;
 
     // Init data
-    this.artists.push(this.local_data.artiste);
+    if (this.action == 'Modifier') {
+      this.artists.push(this.local_data.artiste);
+    }
   }
 
   ngOnInit() {
@@ -67,11 +69,13 @@ export class AlbumDialogComponent implements OnInit, OnDestroy {
       'dateCreation': [this.local_data?.dateCreation, Validators.required],
     });
 
-    // set initial selection
-    this.artistServerSideCtrl.setValue(this.local_data?.artiste);
+    if (this.action == 'Modifier') {
+      // set initial selection
+      this.artistServerSideCtrl.setValue(this.local_data?.artiste);
 
-    // load the initial list
-    this.filteredServerSideArtists.next(this.artists.slice());
+      // load the initial list
+      this.filteredServerSideArtists.next(this.artists.slice());
+    }
 
     // listen for search field value changes
     this.artistServerSideFilteringCtrl.valueChanges

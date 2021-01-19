@@ -1,5 +1,4 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {WowzaService} from '../../services/wowza.service';
 import {MatTable, MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
@@ -35,20 +34,17 @@ export class PlaylistsComponent implements OnInit {
   @ViewChild(MatTable, {static: true}) table: MatTable<any>;
 
   constructor(breakpointObserver: BreakpointObserver, private playlistService: PlaylistService, private router: Router,
-              private toastr: ToastrService, public dialog: MatDialog, private wowzaService: WowzaService) {
+              private toastr: ToastrService, public dialog: MatDialog) {
 
     breakpointObserver.observe(['(max-width: 600px)']).subscribe(result => {
       this.displayedColumns = result.matches ?
-        ['id', 'name', 'is_private', 'action'] :
-        ['id', 'name', 'is_private', 'action'];
+        ['id', 'name', 'status', 'action'] :
+        ['id', 'name', 'status', 'action'];
     });
 
     // Assign the data to the data source for the table to render
     this.dataSource = new MatTableDataSource();
 
-    this.wowzaService.getLiveStreams().subscribe(rep => {
-      console.log('Streams', rep);
-    });
   }
 
   /**

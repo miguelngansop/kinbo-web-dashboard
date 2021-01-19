@@ -29,10 +29,10 @@ export const AppRoutes: Routes = [
         path: 'dashboard',
         loadChildren: () => DashboardModule
       },
-      {
-        path: 'material',
-        loadChildren: () => MaterialComponentsModule
-      },
+      // {
+      //   path: 'material',
+      //   loadChildren: () => MaterialComponentsModule
+      // },
       {
         path: 'artists',
         loadChildren: () => ArtistsModule

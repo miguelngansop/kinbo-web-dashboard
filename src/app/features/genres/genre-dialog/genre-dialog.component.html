@@ -1,5 +1,5 @@
 <h2 mat-dialog-title>
-  <strong>{{action == 'Details' ? 'Details sur ' + local_data.nom : action + 'un genre musical'}}</strong></h2>
+  <strong>{{action == 'Details' ? 'Details sur ' + local_data.nom : action + ' un genre musical'}}</strong></h2>
 <mat-dialog-content *ngIf="action != 'Supprimer'; else elseTemplate" class="button-container">
   <form #userForm="ngForm" fxLayout="row wrap" fxFlexAlign="center" class="row"
         [ngStyle]="{'opacity' : loading ? '30%' : '100%'}">

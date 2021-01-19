@@ -68,10 +68,10 @@
             </ng-container>
 
 
-            <ng-container matColumnDef="is_private">
-              <mat-header-cell *matHeaderCellDef mat-sort-header> Private</mat-header-cell>
+            <ng-container matColumnDef="status">
+              <mat-header-cell *matHeaderCellDef mat-sort-header>Status</mat-header-cell>
               <mat-cell
-                *matCellDef="let row"> {{row.isprivate}} </mat-cell>
+                *matCellDef="let row"> {{row.isprivate ? 'Privée' : 'Publique'}} </mat-cell>
             </ng-container>
 
 

@@ -5,13 +5,14 @@ import {concatMap} from 'rxjs/operators';
 import {ManageFileService} from './manage-file.service';
 import {Music} from '../models/music';
 import {forkJoin, merge} from 'rxjs';
+import {WowzaService} from './wowza.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MusicService {
 
-  constructor(private http: HttpClient, private uploadService: ManageFileService) {
+  constructor(private http: HttpClient, private uploadService: ManageFileService, private wowzaService: WowzaService) {
   }
 
   get(id: string) {
@@ -53,6 +54,34 @@ export class MusicService {
   }
 
   add(music: Music) {
+    // let sources = [];
+    // let idSources = [];
+    // playlist.musiques.forEach((value, index) => {
+    //   if (value.audioURL || value.videoURL) {
+    //     let src = value.videoURL || value.audioURL;
+    //     if (src) {
+    //       let ext = src.substr(src.lastIndexOf('.') + 1);
+    //       // Live stream uniquement pour mp3 , mp4 et flv
+    //       if (['mp3', 'mp4', 'flv'].includes(ext.toLowerCase())) {
+    //         sources.push(this.wowzaService.createLiveStream(playlist.nom + value.nom, src));
+    //         idSources.push(index);
+    //       }
+    //     }
+    //   }
+    // });
+    //
+    // return forkJoin(sources).pipe(
+    //   concatMap((resp: any) => {
+    //       playlist.musiques.map((value, index) => {
+    //         if (idSources.includes(index)) {
+    //           value.streamURL = resp[idSources.indexOf(index)].live_stream.player_hls_playback_url;
+    //         }
+    //         return value;
+    //       });
+    //       return this.http.post(API + '/playlists', playlist);
+    //     }
+    //   ));
+
     return this.http.post(API + '/musiques', music);
   }
 
