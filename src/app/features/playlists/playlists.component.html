@@ -67,6 +67,11 @@
               <mat-cell *matCellDef="let row"> {{row.nom}}</mat-cell>
             </ng-container>
 
+            <ng-container matColumnDef="type">
+              <mat-header-cell *matHeaderCellDef mat-sort-header>Type</mat-header-cell>
+              <mat-cell
+                *matCellDef="let row"> {{getType(row.type)}} </mat-cell>
+            </ng-container>
 
             <ng-container matColumnDef="status">
               <mat-header-cell *matHeaderCellDef mat-sort-header>Status</mat-header-cell>
@@ -74,14 +79,13 @@
                 *matCellDef="let row"> {{row.isprivate ? 'Privée' : 'Publique'}} </mat-cell>
             </ng-container>
 
-
             <ng-container matColumnDef="action">
               <mat-header-cell mat-header-cell *matHeaderCellDef> Action</mat-header-cell>
               <mat-cell mat-cell *matCellDef="let element">
-                <button mat-icon-button color="primary" [routerLink]="'./'+element.id">
+                <button mat-icon-button color="primary" (click)="openDialog('Afficher',element)">
                   <mat-icon aria-label="Afficher">info</mat-icon>
                 </button>
-                <button mat-icon-button [routerLink]="'./'+element.id+'/edit'">
+                <button mat-icon-button (click)="openDialog('Modifier',element)">
                   <mat-icon aria-label="Modifier">create</mat-icon>
                 </button>
                 <button mat-icon-button color="warn" (click)="openDialog('Supprimer',element)">

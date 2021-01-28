@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {API} from '../helpers/global-constants';
 import {Playlist} from '../models/playlist';
+import {Diffusion} from '../models/diffusion';
 
 @Injectable({
   providedIn: 'root'
@@ -22,5 +23,13 @@ export class PlaylistService {
 
   add(playlist: Playlist) {
     return this.http.post(API + '/playlists', playlist);
+  }
+
+  update(id: string, playlist: Playlist) {
+    return this.http.put(`${API}/playlists/${id}`, playlist, {responseType: 'text'});
+  }
+
+  delete(id: string) {
+    return this.http.delete(`${API}/playlists/${id}`, {responseType: 'text'});
   }
 }

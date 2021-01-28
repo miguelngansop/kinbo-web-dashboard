@@ -2,14 +2,16 @@
 <mat-dialog-content *ngIf="action != 'Supprimer'; else elseTemplate" class="button-container">
   <form #form="ngForm" fxLayout="row wrap" fxFlexAlign="center" class="row"
         [ngStyle]="{'opacity' : loading ? '30%' : '100%'}">
-    <mat-form-field fxFlex.gt-sm="75" fxFlex="100" class="p-10">
+    <mat-form-field fxFlex.gt-sm="70" fxFlex="100" class="p-10">
       <input type="text" matInput required name="nom" [(ngModel)]="local_data.nom" placeholder="Nom">
     </mat-form-field>
 
-    <mat-checkbox fxFlex.gt-sm="25" fxFlex="100" class="p-10" required name="isprivate"
-                  [(ngModel)]="local_data.isprivate">
-      Private
-    </mat-checkbox>
+    <mat-form-field fxFlex.gt-sm="30" fxFlex="100" class="p-10">
+      <mat-label>Date de diffusion</mat-label>
+      <input matInput [matDatepicker]="picker" required name="date" [(ngModel)]="local_data.date">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
 
 
     <div fxFlex.gt-sm="100" fxFlex="100">
@@ -105,6 +107,7 @@
   Etes vous sûr de vouloir supprimer <b>{{local_data.nom}}</b> ?
 </ng-template>
 <div mat-dialog-actions align="end">
-  <button mat-button mat-flat-button color="accent" (click)="doAction()">{{action}}</button>
+  <button mat-button mat-flat-button color="accent" (click)="doAction()"
+          *ngIf="action != 'Afficher'">{{action}}</button>
   <button mat-button (click)="closeDialog()" mat-flat-button color="warn">Annuler</button>
 </div>

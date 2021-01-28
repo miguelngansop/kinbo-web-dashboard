@@ -199,10 +199,16 @@ export class MusicCreateComponent implements OnInit, OnDestroy {
 
     this.musicService.addWithDetails(this.music, this.image.file, imageHashCode, this.audio.file, audioHashCode, this.video.file, videoHashCode).subscribe((rep: Music) => {
       if (rep) {
-        this.toastr.success('Nouvelle muisque ajoutée', 'Operation réussie');
-        this.router.navigateByUrl('/musics');
+        this.musicService.createLive(rep).subscribe(_ => {
+          this.toastr.success('Nouvelle muisque ajoutée', 'Operation réussie');
+          this.router.navigateByUrl('/musics');
+          this.loading = false;
+        }, error => {
+          this.loading = false;
+          console.log('create live error', error);
+          this.toastr.error(error.error, 'Erreur');
+        });
       }
-      this.loading = false;
     }, (err => {
       console.log('Error', err);
       this.toastr.error('Verifier vos champs', 'Erreur');

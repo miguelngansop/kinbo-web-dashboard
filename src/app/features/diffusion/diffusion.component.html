@@ -73,17 +73,17 @@
             <ng-container matColumnDef="date">
               <mat-header-cell *matHeaderCellDef mat-sort-header>Date de diffusion</mat-header-cell>
               <mat-cell
-                *matCellDef="let row"> {{row.date | date:'medium'}} </mat-cell>
+                *matCellDef="let row"> {{row.date | date}} </mat-cell>
             </ng-container>
 
 
             <ng-container matColumnDef="action">
               <mat-header-cell mat-header-cell *matHeaderCellDef> Action</mat-header-cell>
               <mat-cell mat-cell *matCellDef="let element">
-                <button mat-icon-button color="primary" [routerLink]="'./'+element.id">
+                <button mat-icon-button color="primary" (click)="openDialog('Afficher',element)">
                   <mat-icon aria-label="Afficher">info</mat-icon>
                 </button>
-                <button mat-icon-button [routerLink]="'./'+element.id+'/edit'">
+                <button mat-icon-button (click)="openDialog('Modifier',element)">
                   <mat-icon aria-label="Modifier">create</mat-icon>
                 </button>
                 <button mat-icon-button color="warn" (click)="openDialog('Supprimer',element)">

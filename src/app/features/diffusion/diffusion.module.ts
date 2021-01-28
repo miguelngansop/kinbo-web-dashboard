@@ -5,6 +5,7 @@ import {DiffusionRoutingModule} from './diffusion-routing.module';
 import {DiffusionComponent} from './diffusion.component';
 import {DemoMaterialModule} from '../../demo-material-module';
 import {DiffusionDialogComponent} from './diffusion-dialog/diffusion-dialog.component';
+import {FormsModule} from '@angular/forms';
 
 
 @NgModule({
@@ -12,7 +13,8 @@ import {DiffusionDialogComponent} from './diffusion-dialog/diffusion-dialog.comp
   imports: [
     CommonModule,
     DiffusionRoutingModule,
-    DemoMaterialModule
+    DemoMaterialModule,
+    FormsModule
   ],
   entryComponents: [DiffusionDialogComponent]
 })

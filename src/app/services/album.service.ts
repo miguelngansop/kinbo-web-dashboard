@@ -5,6 +5,7 @@ import {concatMap} from 'rxjs/operators';
 import {ManageFileService} from './manage-file.service';
 import {forkJoin, merge} from 'rxjs';
 import {Album} from '../models/album';
+import {Playlist} from '../models/playlist';
 
 @Injectable({
   providedIn: 'root'
@@ -39,17 +40,22 @@ export class AlbumService {
     return this.http.post(API + '/albums', album);
   }
 
-  update(album: Album) {
-    return this.http.put(API + '/albums', album);
-  }
 
   updateWithImage(album: Album, file: File, hashCode: string) {
     return this.uploadService.saveFile(file, hashCode).pipe(
       concatMap((res: string) => {
           album.image = res.replace(/"/g, '');
-          return this.http.put(API + '/albums', album);
+          return this.http.put(`${API}/albums/${album.id}`, album);
         }
       ));
+  }
+
+  update(id: string, album: Album) {
+    return this.http.put(`${API}/albums/${id}`, album, {responseType: 'text'});
+  }
+
+  delete(id: string) {
+    return this.http.delete(`${API}/albums/${id}`, {responseType: 'text'});
   }
 
 }

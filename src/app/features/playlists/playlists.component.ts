@@ -38,8 +38,8 @@ export class PlaylistsComponent implements OnInit {
 
     breakpointObserver.observe(['(max-width: 600px)']).subscribe(result => {
       this.displayedColumns = result.matches ?
-        ['id', 'name', 'status', 'action'] :
-        ['id', 'name', 'status', 'action'];
+        ['id', 'name', 'status', 'type', 'action'] :
+        ['id', 'name', 'status', 'type', 'action'];
     });
 
     // Assign the data to the data source for the table to render
@@ -105,12 +105,28 @@ export class PlaylistsComponent implements OnInit {
       if (result) {
         if (result.event != 'Cancel') {
           this.ngAfterViewInit();
-          this.toastr.success(result.message, result.title);
           if (result.event == 'Supprimer') {
             this.toastr.success('Playlist supprimé', 'Operation réussie');
+          } else {
+            this.toastr.success(result.message, result.title);
           }
         }
       }
     });
+  }
+
+  getType(type): string {
+    switch (type) {
+      case 'COMMON':
+        return 'Général';
+      case 'NEW_BRAND':
+        return 'Nouveautés';
+      case 'TOP_10':
+        return 'Top 10';
+      case 'MOOD':
+        return 'De l\'heure';
+      default:
+        return 'n/a';
+    }
   }
 }

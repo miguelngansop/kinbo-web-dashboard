@@ -13,6 +13,7 @@ import {merge} from 'rxjs';
 import {catchError, map, startWith, switchMap} from 'rxjs/operators';
 import {of} from 'rxjs/internal/observable/of';
 import {MusicService} from '../../../services/music.service';
+import {NgForm} from '@angular/forms';
 
 @Component({
   selector: 'app-playlist-dialog',
@@ -35,6 +36,7 @@ export class PlaylistDialogComponent implements AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatTable) table: MatTable<any>;
+  @ViewChild('form') form: NgForm;
 
 
   selection = new SelectionModel<Music>(true, []);
@@ -62,39 +64,57 @@ export class PlaylistDialogComponent implements AfterViewInit {
     // console.log(data);
     this.local_data = {...data.obj};
     this.action = data.action;
+    if (!this.local_data.type) {
+      this.local_data.type = 'COMMON';
+    }
 
     this.musicsDataSource = new MatTableDataSource();
   }
 
   doAction() {
-    let playlist: Playlist = {...this.local_data};
-    this.loading = true;
-    if (this.action == 'Ajouter') {
-      playlist.musiques = this.selection.selected;
-      this.playlistService.add(playlist).subscribe((rep: Playlist) => {
-        if (rep) {
-          this.dialogRef.close({event: this.action, message: 'Nouvelle playlist ajoutée', title: 'Operation réussie'});
-        }
+    if (this.action == 'Supprimer') {
+      this.playlistService.delete(this.local_data.id).subscribe(_ => {
+        this.dialogRef.close({event: this.action});
         this.loading = false;
       }, (err => {
-        this.toastr.error('Verifier vos champs', 'Erreur');
+        console.log(err);
+        this.toastr.error(err.error, 'Erreur');
         this.loading = false;
       }));
-    }
 
-    if (this.action == 'Modifier') {
-      let request$;
-
-      request$.subscribe((rep: Playlist) => {
-        if (rep) {
-          this.dialogRef.close({event: this.action, message: 'Playlist mis à jour', title: 'Operation réussie'});
+    } else {
+      if (this.form.valid) {
+        let playlist: Playlist = {...this.local_data};
+        this.loading = true;
+        playlist.musiques = this.selection.selected;
+        if (this.action == 'Ajouter') {
+          this.playlistService.add(playlist).subscribe((rep: Playlist) => {
+            if (rep) {
+              this.dialogRef.close({event: this.action, message: 'Nouvelle playlist ajoutée', title: 'Operation réussie'});
+            }
+            this.loading = false;
+          }, (err => {
+            this.toastr.error(err.error, 'Erreur');
+            this.loading = false;
+          }));
         }
-        this.loading = false;
-      }, (err => {
-        this.toastr.error('Verifier vos champs', 'Erreur');
-        this.loading = false;
-      }));
+
+        if (this.action == 'Modifier') {
+          this.playlistService.update(playlist.id, playlist).subscribe((rep) => {
+            if (rep) {
+              this.dialogRef.close({event: this.action, message: 'Playlist mis à jour', title: 'Operation réussie'});
+            }
+            this.loading = false;
+          }, (err => {
+            this.toastr.error('Verifier vos champs', 'Erreur');
+            this.loading = false;
+          }));
+        }
+      } else {
+        this.form.ngSubmit.emit(this.form.value);
+      }
     }
+
   }
 
   closeDialog() {
@@ -103,32 +123,42 @@ export class PlaylistDialogComponent implements AfterViewInit {
 
   ngAfterViewInit() {
     //Music
-    this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
-    merge(this.sort.sortChange, this.paginator.page)
-      .pipe(
-        startWith({}),
-        switchMap(() => {
-          this.isLoadingMusicsResults = true;
-          return this.musicService.getAll();
-        }),
-        map((data: Music[]) => {
-          // Flip flag to show that loading has finished.
-          this.isLoadingMusicsResults = false;
-          this.isRateLimitMusicsReached = false;
-          this.musicsLength = data.length;
-          return data;
-        }),
-        catchError(() => {
-          this.isLoadingMusicsResults = false;
-          // Catch if the API has reached its rate limit. Return empty data.
-          this.isRateLimitMusicsReached = true;
-          // alert(err);
-          return of([]);
-        })
-      ).subscribe(data => this.musicsDataSource.data = data);
+    if (this.action != 'Supprimer') {
+      this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+      merge(this.sort.sortChange, this.paginator.page)
+        .pipe(
+          startWith({}),
+          switchMap(() => {
+            this.isLoadingMusicsResults = true;
+            return this.musicService.getAll();
+          }),
+          map((data: Music[]) => {
+            // Flip flag to show that loading has finished.
+            this.isLoadingMusicsResults = false;
+            this.isRateLimitMusicsReached = false;
+            this.musicsLength = data.length;
+            return data;
+          }),
+          catchError(() => {
+            this.isLoadingMusicsResults = false;
+            // Catch if the API has reached its rate limit. Return empty data.
+            this.isRateLimitMusicsReached = true;
+            // alert(err);
+            return of([]);
+          })
+        ).subscribe(data => {
+        this.musicsDataSource.data = data;
+        if (this.local_data.musiques) {
+          let ids = this.local_data.musiques.map(value => value.id);
+          let musics = data.filter(value => ids.includes(value.id));
+          musics.forEach(value => this.selection.select(value));
+        }
+      });
 
-    this.musicsDataSource.paginator = this.paginator;
-    this.musicsDataSource.sort = this.sort;
+      this.musicsDataSource.paginator = this.paginator;
+      this.musicsDataSource.sort = this.sort;
+    }
+
   }
 
   applyFilter(filterValue: string) {

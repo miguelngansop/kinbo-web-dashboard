@@ -43,8 +43,8 @@ export class MusicService {
 
     return forkJoin(sources).pipe(
       concatMap((resp) => {
-        music.image = (<string>resp[0]).replace(/"/g, '');
-        music.audioURL = (<string>resp[1]).replace(/"/g, '');
+          music.image = (<string>resp[0]).replace(/"/g, '');
+          music.audioURL = (<string>resp[1]).replace(/"/g, '');
           if (video) {
             music.videoURL = (<string>resp[2]).replace(/"/g, '');
           }
@@ -54,39 +54,33 @@ export class MusicService {
   }
 
   add(music: Music) {
-    // let sources = [];
-    // let idSources = [];
-    // playlist.musiques.forEach((value, index) => {
-    //   if (value.audioURL || value.videoURL) {
-    //     let src = value.videoURL || value.audioURL;
-    //     if (src) {
-    //       let ext = src.substr(src.lastIndexOf('.') + 1);
-    //       // Live stream uniquement pour mp3 , mp4 et flv
-    //       if (['mp3', 'mp4', 'flv'].includes(ext.toLowerCase())) {
-    //         sources.push(this.wowzaService.createLiveStream(playlist.nom + value.nom, src));
-    //         idSources.push(index);
-    //       }
-    //     }
-    //   }
-    // });
-    //
-    // return forkJoin(sources).pipe(
-    //   concatMap((resp: any) => {
-    //       playlist.musiques.map((value, index) => {
-    //         if (idSources.includes(index)) {
-    //           value.streamURL = resp[idSources.indexOf(index)].live_stream.player_hls_playback_url;
-    //         }
-    //         return value;
-    //       });
-    //       return this.http.post(API + '/playlists', playlist);
-    //     }
-    //   ));
-
     return this.http.post(API + '/musiques', music);
   }
 
+  createLive(music: Music) {
+    let sources = [];
+    let idSources = [];
+    if (music.audioURL) {
+      let src = music.audioURL;
+      if (src) {
+        let ext = src.substr(src.lastIndexOf('.') + 1);
+        // Live stream uniquement pour mp3 , mp4 et flv
+        if (['mp3', 'mp4', 'flv'].includes(ext.toLowerCase())) {
+          sources.push(this.wowzaService.createLiveStream(music.nom, src));
+        }
+      }
+    }
+
+    return forkJoin(sources).pipe(
+      concatMap((resp: any) => {
+          music.streamURL = resp[0].live_stream.player_hls_playback_url;
+          return this.update(music);
+        }
+      ));
+  }
+
   update(music: Music) {
-    return this.http.put(API + '/musiques', music);
+    return merge(this.wowzaService.startStream(music.streamID), this.http.put(`${API}/musiques/${music.id}`, music, {responseType: 'text'}));
   }
 
   updateWithImage(music: Music, audio: File, audioHashCode: string, video: File, videoHashCode: string) {

@@ -23,4 +23,12 @@ export class DiffusionService {
   add(diffusion: Diffusion) {
     return this.http.post(API + '/diffusions', diffusion);
   }
+
+  update(id: string, diffusion: Diffusion) {
+    return this.http.put(`${API}/diffusions/${id}`, diffusion, {responseType: 'text'});
+  }
+
+  delete(id: string) {
+    return this.http.delete(`${API}/diffusions/${id}`, {responseType: 'text'});
+  }
 }

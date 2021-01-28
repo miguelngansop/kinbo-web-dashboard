@@ -103,9 +103,10 @@ export class AlbumsComponent implements OnInit {
       if (result) {
         if (result.event != 'Cancel') {
           this.ngAfterViewInit();
-          this.toastr.success(result.message, result.title);
           if (result.event == 'Supprimer') {
             this.toastr.success('Album supprimé', 'Operation réussie');
+          } else {
+            this.toastr.success(result.message, result.title);
           }
         }
       }

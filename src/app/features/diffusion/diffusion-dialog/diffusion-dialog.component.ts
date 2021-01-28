@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit, Optional, ViewChild} from '@angular/core';
+import {Component, ElementRef, Inject, OnInit, Optional, ViewChild} from '@angular/core';
 import {Diffusion} from '../../../models/diffusion';
 import {MatTable, MatTableDataSource} from '@angular/material/table';
 import {Music} from '../../../models/music';
@@ -12,6 +12,7 @@ import {MusicService} from '../../../services/music.service';
 import {merge} from 'rxjs';
 import {catchError, map, startWith, switchMap} from 'rxjs/operators';
 import {of} from 'rxjs/internal/observable/of';
+import {NgForm} from '@angular/forms';
 
 @Component({
   selector: 'app-diffusion-dialog',
@@ -34,6 +35,7 @@ export class DiffusionDialogComponent {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatTable) table: MatTable<any>;
+  @ViewChild('form') form: NgForm;
 
 
   selection = new SelectionModel<Music>(true, []);
@@ -63,36 +65,58 @@ export class DiffusionDialogComponent {
     this.action = data.action;
 
     this.musicsDataSource = new MatTableDataSource();
+
+    if (!this.local_data.date) {
+      this.local_data.date = new Date();
+    }
+
   }
 
   doAction() {
-    let diffusion: Diffusion = {...this.local_data};
-    this.loading = true;
-    if (this.action == 'Ajouter') {
-      diffusion.musiques = this.selection.selected;
-      this.diffusionService.add(diffusion).subscribe((rep: Diffusion) => {
-        if (rep) {
-          this.dialogRef.close({event: this.action, message: 'Nouvelle diffusion ajoutée', title: 'Operation réussie'});
-        }
+    if (this.action == 'Supprimer') {
+      this.diffusionService.delete(this.local_data.id).subscribe(_ => {
+        this.dialogRef.close({event: this.action});
         this.loading = false;
       }, (err => {
-        this.toastr.error('Verifier vos champs', 'Erreur');
+        console.log(err);
+        this.toastr.error(err.error, 'Erreur');
         this.loading = false;
       }));
-    }
 
-    if (this.action == 'Modifier') {
-      let request$;
-
-      request$.subscribe((rep: Diffusion) => {
-        if (rep) {
-          this.dialogRef.close({event: this.action, message: 'Diffusion mis à jour', title: 'Operation réussie'});
+    } else {
+      if (this.form.valid) {
+        let diffusion: Diffusion = {...this.local_data};
+        this.loading = true;
+        diffusion.musiques = this.selection.selected;
+        if (this.action == 'Ajouter') {
+          this.diffusionService.add(diffusion).subscribe((rep: Diffusion) => {
+            if (rep) {
+              this.dialogRef.close({event: this.action, message: 'Nouvelle diffusion ajoutée', title: 'Operation réussie'});
+            }
+            this.loading = false;
+          }, (err => {
+            this.toastr.error('Verifier vos champs', 'Erreur');
+            this.loading = false;
+          }));
         }
-        this.loading = false;
-      }, (err => {
-        this.toastr.error('Verifier vos champs', 'Erreur');
-        this.loading = false;
-      }));
+
+        if (this.action == 'Modifier') {
+          this.diffusionService.update(diffusion.id, diffusion).subscribe(rep => {
+            if (rep) {
+              this.dialogRef.close({event: this.action, message: 'Diffusion mis à jour', title: 'Operation réussie'});
+            }
+            this.loading = false;
+          }, (err => {
+            console.log(err);
+            this.toastr.error('Verifier vos champs', 'Erreur');
+            this.loading = false;
+          }));
+        }
+
+      } else {
+        this.form.ngSubmit.emit(this.form.value);
+      }
+
     }
   }
 
@@ -102,32 +126,41 @@ export class DiffusionDialogComponent {
 
   ngAfterViewInit() {
     //Music
-    this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
-    merge(this.sort.sortChange, this.paginator.page)
-      .pipe(
-        startWith({}),
-        switchMap(() => {
-          this.isLoadingMusicsResults = true;
-          return this.musicService.getAll();
-        }),
-        map((data: Music[]) => {
-          // Flip flag to show that loading has finished.
-          this.isLoadingMusicsResults = false;
-          this.isRateLimitMusicsReached = false;
-          this.musicsLength = data.length;
-          return data;
-        }),
-        catchError(() => {
-          this.isLoadingMusicsResults = false;
-          // Catch if the API has reached its rate limit. Return empty data.
-          this.isRateLimitMusicsReached = true;
-          // alert(err);
-          return of([]);
-        })
-      ).subscribe(data => this.musicsDataSource.data = data);
+    if (this.action != 'Supprimer') {
+      this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+      merge(this.sort.sortChange, this.paginator.page)
+        .pipe(
+          startWith({}),
+          switchMap(() => {
+            this.isLoadingMusicsResults = true;
+            return this.musicService.getAll();
+          }),
+          map((data: Music[]) => {
+            // Flip flag to show that loading has finished.
+            this.isLoadingMusicsResults = false;
+            this.isRateLimitMusicsReached = false;
+            this.musicsLength = data.length;
+            return data;
+          }),
+          catchError(() => {
+            this.isLoadingMusicsResults = false;
+            // Catch if the API has reached its rate limit. Return empty data.
+            this.isRateLimitMusicsReached = true;
+            // alert(err);
+            return of([]);
+          })
+        ).subscribe(data => {
+        this.musicsDataSource.data = data;
+        if (this.local_data.musiques) {
+          let ids = this.local_data.musiques.map(value => value.id);
+          let musics = data.filter(value => ids.includes(value.id));
+          musics.forEach(value => this.selection.select(value));
+        }
+      });
 
-    this.musicsDataSource.paginator = this.paginator;
-    this.musicsDataSource.sort = this.sort;
+      this.musicsDataSource.paginator = this.paginator;
+      this.musicsDataSource.sort = this.sort;
+    }
   }
 
   applyFilter(filterValue: string) {
@@ -135,5 +168,4 @@ export class DiffusionDialogComponent {
     filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
     this.musicsDataSource.filter = filterValue;
   }
-
 }
