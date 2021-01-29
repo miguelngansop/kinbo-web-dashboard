@@ -6,6 +6,7 @@ import {ManageFileService} from './manage-file.service';
 import {Music} from '../models/music';
 import {forkJoin, merge} from 'rxjs';
 import {WowzaService} from './wowza.service';
+import {of} from 'rxjs/internal/observable/of';
 
 @Injectable({
   providedIn: 'root'
@@ -71,12 +72,17 @@ export class MusicService {
       }
     }
 
-    return forkJoin(sources).pipe(
-      concatMap((resp: any) => {
-          music.streamURL = resp[0].live_stream.player_hls_playback_url;
-          return this.update(music);
-        }
-      ));
+    if (sources.length == 0) {
+      return of({});
+    } else {
+      return forkJoin(sources).pipe(
+        concatMap((resp: any) => {
+            music.streamURL = resp[0].live_stream.player_hls_playback_url;
+            return this.update(music);
+          }
+        ));
+    }
+
   }
 
   update(music: Music) {

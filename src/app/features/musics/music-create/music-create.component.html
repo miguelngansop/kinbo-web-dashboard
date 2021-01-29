@@ -72,7 +72,7 @@
           <input #audioFile type="file" accept="audio/*" name="audio" (change)="onAudioChange(audioFile.files)">
           <span *ngIf="audioMessage" class="text-danger m-l-10">{{audioMessage}}</span>
           <span class="mat-h5"
-                *ngIf="!setNewAudio || this.music.audioURL"><strong>{{music?.audioURL || 'Audio file undefined'}}</strong></span>
+                *ngIf="!setNewAudio || this.music?.audioURL"><strong>{{music?.audioURL || 'Audio file undefined'}}</strong></span>
         </label>
 
         <div class="m-t-30">Video</div>
@@ -80,7 +80,7 @@
           <input #videoFile type="file" accept="video/*" name="video" (change)="onVideoChange(videoFile.files)">
           <span *ngIf="videoMessage" class="text-danger m-l-10">{{videoMessage}}</span>
           <span class="mat-h5"
-                *ngIf="!setNewVideo|| this.music.videoURL"><strong>{{music?.videoURL || 'Video file undefined'}}</strong></span>
+                *ngIf="!setNewVideo|| this.music?.videoURL"><strong>{{music?.videoURL || 'Video file undefined'}}</strong></span>
         </label>
 
         <div class="m-t-30">Lyrics</div>
@@ -96,7 +96,7 @@
     </mat-card-content>
     <mat-card-actions align="center" style="padding: 20px;">
       <button mat-button mat-flat-button color="accent" type="submit"
-              [disabled]="!(form.valid && !setNewAudio)">Valider
+              [disabled]="!(form.valid && setNewAudio)">Valider
       </button>
       <button mat-button mat-flat-button color="warn" routerLink="/musics">Annuler</button>
     </mat-card-actions>
