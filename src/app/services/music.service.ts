@@ -78,6 +78,7 @@ export class MusicService {
       return forkJoin(sources).pipe(
         concatMap((resp: any) => {
             music.streamURL = resp[0].live_stream.player_hls_playback_url;
+          music.streamID = resp[0].live_stream.id;
             return this.update(music);
           }
         ));

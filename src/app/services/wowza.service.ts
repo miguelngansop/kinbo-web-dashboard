@@ -62,7 +62,7 @@ export class WowzaService {
   }
 
   startStream(id: string) {
-    return this.http.put(`${WOWZA_CLOUD_HOST}/live_streams/${id}/start`, {});
+    return this.http.put(`${WOWZA_CLOUD_HOST}/live_streams/${id}/start`, {}, {headers: headers});
   }
 
 

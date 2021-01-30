@@ -103,9 +103,10 @@ export class MusicsComponent implements OnInit, AfterViewInit {
       if (result) {
         if (result.event != 'Cancel') {
           this.ngAfterViewInit();
-          this.toastr.success(result.message, result.title);
           if (result.event == 'Supprimer') {
             this.toastr.success('Musice supprimé', 'Operation réussie');
+          } else {
+            this.toastr.success(result.message, result.title);
           }
         }
       }
