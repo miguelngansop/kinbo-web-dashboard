@@ -19,6 +19,8 @@ export const OAUTH_CONFIG : AuthConfig = {
   userinfoEndpoint: API + '/api/agents/authenticated'
 };
 
-export const WOWZA_CLOUD_API_KEY: string = 'T8KCG2kbcgDQs0zQfR2aDCH5HCYrIYsrqwQDjR0H04YgLDdxjwEwsAZGh0FJ322c';
-export const WOWZA_CLOUD_ACCESS_KEY: string = '2CZwf4dQOG1dSLKojKYdXSK93Sig7tYo4kGJjc5SapcZwAbjfJCbM5cGRkf13303';
+// export const WOWZA_CLOUD_API_KEY: string = 'T8KCG2kbcgDQs0zQfR2aDCH5HCYrIYsrqwQDjR0H04YgLDdxjwEwsAZGh0FJ322c';
+// export const WOWZA_CLOUD_ACCESS_KEY: string = '2CZwf4dQOG1dSLKojKYdXSK93Sig7tYo4kGJjc5SapcZwAbjfJCbM5cGRkf13303';
+export const WOWZA_CLOUD_API_KEY: string = 'NVTvFc5I4fJzjtSfOYuAw6n66hJS7rPyRymWgVZDWR0mxk4S0h2cK38rJQLQ3321';
+export const WOWZA_CLOUD_ACCESS_KEY: string = 'demvj0cEmvxq7JJxAK6jPuaiIv6BRTqpgQKwZHmuVev3LgRgK3FBPXCkZIuT3558';
 export const WOWZA_CLOUD_HOST: string = 'https://api.cloud.wowza.com/api/v1.6/';

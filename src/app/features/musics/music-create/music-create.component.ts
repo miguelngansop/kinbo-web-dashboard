@@ -53,8 +53,11 @@ export class MusicCreateComponent implements OnInit, OnDestroy {
       this.title = data.title;
 
       // Init data
-      this.artists.push(this.music.artiste);
-      this.genres.push(this.music.genre);
+      if (this.music) {
+        this.artists.push(this.music.artiste);
+        this.genres.push(this.music.genre);
+      }
+
     });
   }
 
@@ -101,13 +104,19 @@ export class MusicCreateComponent implements OnInit, OnDestroy {
       'lyric': [this.music?.lyric]
     });
 
-    // set initial selection
-    this.artistServerSideCtrl.setValue(this.music?.artiste);
-    this.genreServerSideCtrl.setValue(this.music?.genre);
+    if (this.music) {
+      // set initial selection and load the initial list
+      if (this.music?.artiste) {
+        this.artistServerSideCtrl.setValue(this.music?.artiste);
+        this.filteredServerSideArtists.next(this.artists.slice());
+      }
 
-    // load the initial list
-    this.filteredServerSideArtists.next(this.artists.slice());
-    this.filteredServerSideGenres.next(this.genres.slice());
+      if (this.music?.genre) {
+        this.genreServerSideCtrl.setValue(this.music?.genre);
+        this.filteredServerSideGenres.next(this.genres.slice());
+      }
+
+    }
 
     // listen for search field value changes
     this.artistServerSideFilteringCtrl.valueChanges
@@ -190,10 +199,16 @@ export class MusicCreateComponent implements OnInit, OnDestroy {
 
     this.musicService.addWithDetails(this.music, this.image.file, imageHashCode, this.audio.file, audioHashCode, this.video.file, videoHashCode).subscribe((rep: Music) => {
       if (rep) {
-        this.toastr.success('Nouvelle muisque ajoutée', 'Operation réussie');
-        this.router.navigateByUrl('/musics');
+        this.musicService.createLive(rep).subscribe(_ => {
+          this.toastr.success('Nouvelle muisque ajoutée', 'Operation réussie');
+          this.router.navigateByUrl('/musics');
+          this.loading = false;
+        }, error => {
+          this.loading = false;
+          console.log('create live error', error);
+          this.toastr.error(error.error, 'Erreur');
+        });
       }
-      this.loading = false;
     }, (err => {
       console.log('Error', err);
       this.toastr.error('Verifier vos champs', 'Erreur');

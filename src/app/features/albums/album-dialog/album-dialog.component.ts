@@ -56,7 +56,9 @@ export class AlbumDialogComponent implements OnInit, OnDestroy {
     this.action = data.action;
 
     // Init data
-    this.artists.push(this.local_data.artiste);
+    if (this.action == 'Modifier') {
+      this.artists.push(this.local_data.artiste);
+    }
   }
 
   ngOnInit() {
@@ -67,11 +69,13 @@ export class AlbumDialogComponent implements OnInit, OnDestroy {
       'dateCreation': [this.local_data?.dateCreation, Validators.required],
     });
 
-    // set initial selection
-    this.artistServerSideCtrl.setValue(this.local_data?.artiste);
+    if (this.action == 'Modifier') {
+      // set initial selection
+      this.artistServerSideCtrl.setValue(this.local_data?.artiste);
 
-    // load the initial list
-    this.filteredServerSideArtists.next(this.artists.slice());
+      // load the initial list
+      this.filteredServerSideArtists.next(this.artists.slice());
+    }
 
     // listen for search field value changes
     this.artistServerSideFilteringCtrl.valueChanges
@@ -96,7 +100,7 @@ export class AlbumDialogComponent implements OnInit, OnDestroy {
   }
 
   doAction() {
-    let album: Album = {...this.form.value};
+    let album: Album = {id: this.local_data.id, ...this.form.value};
     this.loading = true;
     if (this.action == 'Ajouter') {
       let request$;
@@ -108,7 +112,7 @@ export class AlbumDialogComponent implements OnInit, OnDestroy {
         request$ = this.albumService.add(album);
       }
 
-      request$.subscribe((rep: Album) => {
+      request$.subscribe((rep) => {
         if (rep) {
           this.dialogRef.close({event: this.action, message: 'Nouvel album ajouté', title: 'Operation réussie'});
         }
@@ -125,9 +129,9 @@ export class AlbumDialogComponent implements OnInit, OnDestroy {
         let hashCode = Md5.hashAsciiStr(this.image.file.name + new Date()).toString();
         request$ = this.albumService.updateWithImage(album, this.image.file, hashCode);
       } else {
-        request$ = this.albumService.update(album);
+        request$ = this.albumService.update(album.id, album);
       }
-      request$.subscribe((rep: Album) => {
+      request$.subscribe((rep) => {
         if (rep) {
           this.dialogRef.close({event: this.action, message: 'Album mis à jour', title: 'Operation réussie'});
         }
@@ -136,6 +140,18 @@ export class AlbumDialogComponent implements OnInit, OnDestroy {
         this.toastr.error('Verifier vos champs', 'Erreur');
         this.loading = false;
       }));
+    }
+
+    if (this.action == 'Supprimer') {
+      this.albumService.delete(this.local_data.id).subscribe(_ => {
+        this.dialogRef.close({event: this.action});
+        this.loading = false;
+      }, (err => {
+        console.log(err);
+        this.toastr.error(err.error, 'Erreur');
+        this.loading = false;
+      }));
+
     }
   }
 

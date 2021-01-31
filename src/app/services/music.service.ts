@@ -5,13 +5,15 @@ import {concatMap} from 'rxjs/operators';
 import {ManageFileService} from './manage-file.service';
 import {Music} from '../models/music';
 import {forkJoin, merge} from 'rxjs';
+import {WowzaService} from './wowza.service';
+import {of} from 'rxjs/internal/observable/of';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MusicService {
 
-  constructor(private http: HttpClient, private uploadService: ManageFileService) {
+  constructor(private http: HttpClient, private uploadService: ManageFileService, private wowzaService: WowzaService) {
   }
 
   get(id: string) {
@@ -42,8 +44,8 @@ export class MusicService {
 
     return forkJoin(sources).pipe(
       concatMap((resp) => {
-        music.image = (<string>resp[0]).replace(/"/g, '');
-        music.audioURL = (<string>resp[1]).replace(/"/g, '');
+          music.image = (<string>resp[0]).replace(/"/g, '');
+          music.audioURL = (<string>resp[1]).replace(/"/g, '');
           if (video) {
             music.videoURL = (<string>resp[2]).replace(/"/g, '');
           }
@@ -56,8 +58,36 @@ export class MusicService {
     return this.http.post(API + '/musiques', music);
   }
 
+  createLive(music: Music) {
+    let sources = [];
+    let idSources = [];
+    if (music.audioURL) {
+      let src = music.audioURL;
+      if (src) {
+        let ext = src.substr(src.lastIndexOf('.') + 1);
+        // Live stream uniquement pour mp3 , mp4 et flv
+        if (['mp3', 'mp4', 'flv'].includes(ext.toLowerCase())) {
+          sources.push(this.wowzaService.createLiveStream(music.nom, src));
+        }
+      }
+    }
+
+    if (sources.length == 0) {
+      return of({});
+    } else {
+      return forkJoin(sources).pipe(
+        concatMap((resp: any) => {
+            music.streamURL = resp[0].live_stream.player_hls_playback_url;
+          music.streamID = resp[0].live_stream.id;
+            return this.update(music);
+          }
+        ));
+    }
+
+  }
+
   update(music: Music) {
-    return this.http.put(API + '/musiques', music);
+    return merge(this.wowzaService.startStream(music.streamID), this.http.put(`${API}/musiques/${music.id}`, music, {responseType: 'text'}));
   }
 
   updateWithImage(music: Music, audio: File, audioHashCode: string, video: File, videoHashCode: string) {

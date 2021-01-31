@@ -12,6 +12,7 @@ export class Music {
   audioURL: string;
   videoURL: string;
   streamURL: string;
+  streamID: string;
   dateCreation: string;
   image: string;
   lyric: string;

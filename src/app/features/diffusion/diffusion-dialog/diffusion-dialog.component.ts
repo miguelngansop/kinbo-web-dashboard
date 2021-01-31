@@ -1,29 +1,28 @@
-import {AfterViewInit, Component, Inject, OnInit, Optional, ViewChild} from '@angular/core';
-import {Playlist} from '../../../models/playlist';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {PlaylistService} from '../../../services/playlist.service';
-import {ToastrService} from 'ngx-toastr';
-import {Md5} from 'ts-md5';
+import {Component, ElementRef, Inject, OnInit, Optional, ViewChild} from '@angular/core';
+import {Diffusion} from '../../../models/diffusion';
 import {MatTable, MatTableDataSource} from '@angular/material/table';
 import {Music} from '../../../models/music';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {SelectionModel} from '@angular/cdk/collections';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {DiffusionService} from '../../../services/diffusion.service';
+import {ToastrService} from 'ngx-toastr';
+import {MusicService} from '../../../services/music.service';
 import {merge} from 'rxjs';
 import {catchError, map, startWith, switchMap} from 'rxjs/operators';
 import {of} from 'rxjs/internal/observable/of';
-import {MusicService} from '../../../services/music.service';
 import {NgForm} from '@angular/forms';
 
 @Component({
-  selector: 'app-playlist-dialog',
-  templateUrl: './playlist-dialog.component.html',
-  styleUrls: ['./playlist-dialog.component.css']
+  selector: 'app-diffusion-dialog',
+  templateUrl: './diffusion-dialog.component.html',
+  styleUrls: ['./diffusion-dialog.component.css']
 })
-export class PlaylistDialogComponent implements AfterViewInit {
+export class DiffusionDialogComponent {
 
   action: string;
-  local_data: Playlist;
+  local_data: Diffusion;
   loading: boolean = false;
 
   musicsDisplayedColumns: any = ['select', 'cover', 'name', 'genre', 'price', 'date'];
@@ -57,23 +56,25 @@ export class PlaylistDialogComponent implements AfterViewInit {
 
 
   constructor(
-    public dialogRef: MatDialogRef<PlaylistDialogComponent>, private playlistService: PlaylistService,
+    public dialogRef: MatDialogRef<DiffusionDialogComponent>, private diffusionService: DiffusionService,
     private toastr: ToastrService, private musicService: MusicService,
     //@Optional() is used to prevent error if no data is passed
     @Optional() @Inject(MAT_DIALOG_DATA) public data: any) {
     // console.log(data);
     this.local_data = {...data.obj};
     this.action = data.action;
-    if (!this.local_data.type) {
-      this.local_data.type = 'COMMON';
-    }
 
     this.musicsDataSource = new MatTableDataSource();
+
+    if (!this.local_data.date) {
+      this.local_data.date = new Date();
+    }
+
   }
 
   doAction() {
     if (this.action == 'Supprimer') {
-      this.playlistService.delete(this.local_data.id).subscribe(_ => {
+      this.diffusionService.delete(this.local_data.id).subscribe(_ => {
         this.dialogRef.close({event: this.action});
         this.loading = false;
       }, (err => {
@@ -84,25 +85,13 @@ export class PlaylistDialogComponent implements AfterViewInit {
 
     } else {
       if (this.form.valid) {
-        let playlist: Playlist = {...this.local_data};
+        let diffusion: Diffusion = {...this.local_data};
         this.loading = true;
-        playlist.musiques = this.selection.selected;
+        diffusion.musiques = this.selection.selected;
         if (this.action == 'Ajouter') {
-          this.playlistService.add(playlist).subscribe((rep: Playlist) => {
+          this.diffusionService.add(diffusion).subscribe((rep: Diffusion) => {
             if (rep) {
-              this.dialogRef.close({event: this.action, message: 'Nouvelle playlist ajoutée', title: 'Operation réussie'});
-            }
-            this.loading = false;
-          }, (err => {
-            this.toastr.error(err.error, 'Erreur');
-            this.loading = false;
-          }));
-        }
-
-        if (this.action == 'Modifier') {
-          this.playlistService.update(playlist.id, playlist).subscribe((rep) => {
-            if (rep) {
-              this.dialogRef.close({event: this.action, message: 'Playlist mis à jour', title: 'Operation réussie'});
+              this.dialogRef.close({event: this.action, message: 'Nouvelle diffusion ajoutée', title: 'Operation réussie'});
             }
             this.loading = false;
           }, (err => {
@@ -110,11 +99,25 @@ export class PlaylistDialogComponent implements AfterViewInit {
             this.loading = false;
           }));
         }
+
+        if (this.action == 'Modifier') {
+          this.diffusionService.update(diffusion.id, diffusion).subscribe(rep => {
+            if (rep) {
+              this.dialogRef.close({event: this.action, message: 'Diffusion mis à jour', title: 'Operation réussie'});
+            }
+            this.loading = false;
+          }, (err => {
+            console.log(err);
+            this.toastr.error('Verifier vos champs', 'Erreur');
+            this.loading = false;
+          }));
+        }
+
       } else {
         this.form.ngSubmit.emit(this.form.value);
       }
-    }
 
+    }
   }
 
   closeDialog() {
@@ -158,7 +161,6 @@ export class PlaylistDialogComponent implements AfterViewInit {
       this.musicsDataSource.paginator = this.paginator;
       this.musicsDataSource.sort = this.sort;
     }
-
   }
 
   applyFilter(filterValue: string) {

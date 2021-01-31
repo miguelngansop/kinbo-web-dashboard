@@ -1,19 +1,18 @@
-<h2 mat-dialog-title><strong>{{action}} une playlist</strong></h2>
+<h2 mat-dialog-title><strong>{{action}} une diffusion</strong></h2>
 <mat-dialog-content *ngIf="action != 'Supprimer'; else elseTemplate" class="button-container">
-  <form #form="ngForm" fxLayout="row wrap" fxLayoutAlign="center" class="row"
+  <form #form="ngForm" fxLayout="row wrap" fxFlexAlign="center" class="row"
         [ngStyle]="{'opacity' : loading ? '30%' : '100%'}">
     <mat-form-field fxFlex.gt-sm="70" fxFlex="100" class="p-10">
       <input type="text" matInput required name="nom" [(ngModel)]="local_data.nom" placeholder="Nom">
     </mat-form-field>
 
     <mat-form-field fxFlex.gt-sm="30" fxFlex="100" class="p-10">
-      <mat-select name="type" [(ngModel)]="local_data.type" required>
-        <mat-option value="COMMON">Général</mat-option>
-        <mat-option value="NEW_BRAND">Nouveautés</mat-option>
-        <mat-option value="TOP_10">Top 10</mat-option>
-        <mat-option value="MOOD">De l'heure</mat-option>
-      </mat-select>
+      <mat-label>Date de diffusion</mat-label>
+      <input matInput [matDatepicker]="picker" required name="date" [(ngModel)]="local_data.date">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
+
 
     <div fxFlex.gt-sm="100" fxFlex="100">
       <mat-card>
@@ -99,10 +98,6 @@
       </mat-card>
     </div>
 
-    <mat-checkbox fxFlex.gt-sm="100" fxFlex="100" class="p-10" fxLayoutAlign="end" name="isprivate"
-                  [(ngModel)]="local_data.isprivate">
-      Privée
-    </mat-checkbox>
   </form>
   <div class="spinner-container" *ngIf="loading">
     <mat-spinner diameter="50" color="primary"></mat-spinner>

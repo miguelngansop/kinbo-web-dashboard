@@ -6,7 +6,7 @@ import {Music} from './music';
 export class Playlist {
   id: string;
   nom: string;
-  ispublic: Artist;
+  type: string;
   isprivate: Album;
   musiques: Music[];
 }

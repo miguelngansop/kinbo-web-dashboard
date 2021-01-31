@@ -16,7 +16,7 @@
                                  [searching]="searchingArtist"></ngx-mat-select-search>
         </mat-option>
         <mat-option *ngFor="let artist of filteredServerSideArtists | async" [value]="artist">
-          {{artist.nom + ' ' + artist.prenom}}
+          {{artist?.nom + ' ' + artist?.prenom}}
         </mat-option>
       </mat-select>
     </mat-form-field>

@@ -56,8 +56,13 @@ export class WowzaService {
         'source_url': file_src,
         'target_delivery_protocol': 'hls-https',
         'use_stream_source': false,
+        'vod_stream': true
       }
     }, {headers: headers});
+  }
+
+  startStream(id: string) {
+    return this.http.put(`${WOWZA_CLOUD_HOST}/live_streams/${id}/start`, {}, {headers: headers});
   }
 
 

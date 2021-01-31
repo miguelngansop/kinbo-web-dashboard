@@ -2,17 +2,14 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {API} from '../helpers/global-constants';
 import {Playlist} from '../models/playlist';
-import {WowzaService} from './wowza.service';
-import {forkJoin} from 'rxjs';
-import {concatMap} from 'rxjs/operators';
-import {date} from 'ng2-validation/dist/date';
+import {Diffusion} from '../models/diffusion';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PlaylistService {
 
-  constructor(private http: HttpClient, private wowzaService: WowzaService) {
+  constructor(private http: HttpClient) {
   }
 
   get(id: string) {
@@ -25,33 +22,14 @@ export class PlaylistService {
   }
 
   add(playlist: Playlist) {
-    let sources = [];
-    let idSources = [];
-    playlist.musiques.forEach((value, index) => {
-      if (value.audioURL || value.videoURL) {
-        let src = value.videoURL || value.audioURL;
-        if (src) {
-          let ext = src.substr(src.lastIndexOf('.') + 1);
-          // Live stream uniquement pour mp3 , mp4 et flv
-          if (['mp3', 'mp4', 'flv'].includes(ext.toLowerCase())) {
-            sources.push(this.wowzaService.createLiveStream(playlist.nom + value.nom, src));
-            idSources.push(index);
-          }
-        }
-      }
-    });
+    return this.http.post(API + '/playlists', playlist);
+  }
 
-    return forkJoin(sources).pipe(
-      concatMap((resp: any) => {
-          playlist.musiques.map((value, index) => {
-            if (idSources.includes(index)) {
-              value.streamURL = resp[idSources.indexOf(index)].live_stream.player_hls_playback_url;
-            }
-            return value;
-          });
-          return this.http.post(API + '/playlists', playlist);
-        }
-      ));
+  update(id: string, playlist: Playlist) {
+    return this.http.put(`${API}/playlists/${id}`, playlist, {responseType: 'text'});
+  }
 
+  delete(id: string) {
+    return this.http.delete(`${API}/playlists/${id}`, {responseType: 'text'});
   }
 }

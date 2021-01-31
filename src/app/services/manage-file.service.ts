@@ -36,7 +36,7 @@ export class ManageFileService {
   saveFile(file: File, hashCode: string) {
     if (file) {
       const formdata: FormData = new FormData();
-      formdata.append('file', file, hashCode + '.' + file.type.substr(6));
+      formdata.append('file', file, hashCode + '.' + file.name.substr(file.name.lastIndexOf('.') + 1));
       return this.http.post(`${API}/s3/upload`, formdata, {responseType: 'text'});
     } else {
       return of({});
