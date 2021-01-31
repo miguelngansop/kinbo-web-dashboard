@@ -3,6 +3,7 @@ import {Artist} from './artist';
 export class Album {
   id: string;
   titre: string;
-  music: string;
+  image: string;
+  dateCreation: string;
   artiste: Artist;
 }

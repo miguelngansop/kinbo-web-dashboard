@@ -18,6 +18,18 @@ export class MusicService {
     return this.http.get(`${API}/musiques/${id}`);
   }
 
+  getMusicsOfAlbum(id: string) {
+    return this.http.get(`${API}/musiques/album/${id}`);
+  }
+
+  count() {
+    return this.http.get(`${API}/musiques/count`);
+  }
+
+  saveMusicsInAlbum(idAlbum: string, musics: Music[]) {
+    return this.http.put(API + '/musiques/album/' + idAlbum, musics);
+  }
+
   getAll() {
     return this.http.get(API + '/musiques/all');
   }

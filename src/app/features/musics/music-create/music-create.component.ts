@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Music} from '../../../models/music';
 import {FileUpload} from '../../../shared/image-upload/image-upload.component';
 import {ArtistService} from '../../../services/artist.service';
@@ -7,12 +7,13 @@ import {Artist} from '../../../models/artist';
 import {Genre} from '../../../models/genre';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {ReplaySubject, Subject} from 'rxjs';
-import {debounceTime, delay, tap, filter, map, takeUntil, concatMap} from 'rxjs/operators';
+import {debounceTime, delay, tap, filter, map, takeUntil, concatMap, take} from 'rxjs/operators';
 import {Md5} from 'ts-md5';
 import {MusicService} from '../../../services/music.service';
 import {ToastrService} from 'ngx-toastr';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {Album} from '../../../models/album';
+import {MatSelect} from '@angular/material/select';
 
 @Component({
   selector: 'app-create',
@@ -35,22 +36,25 @@ export class MusicCreateComponent implements OnInit, OnDestroy {
   audioMessage;
   videoMessage;
   form: FormGroup;
+  title = 'Nouvelle musique';
+
+  setNewAudio: boolean = false;
+  setNewVideo: boolean = false;
+
+  @ViewChild('artistSelect') artistSelect: MatSelect;
+  @ViewChild('genreSelect') genreSelect: MatSelect;
 
 
   constructor(private artistService: ArtistService, private genreService: GenreService, private musicService: MusicService,
-              private toastr: ToastrService, private  fb: FormBuilder, private router: Router) {
+              private toastr: ToastrService, private  fb: FormBuilder, private router: Router, private route: ActivatedRoute,) {
     // this.artistService.getAll().subscribe((data: Artist[]) => this.artists = data);
+    this.route.data.subscribe((data: { music: Music, title: string }) => {
+      this.music = data.music;
+      this.title = data.title;
 
-    this.genreService.getAll().subscribe((data: Genre[]) => this.genres = data);
-
-    this.form = this.fb.group({
-      'nom': [null, Validators.required],
-      'artiste': [null, Validators.required],
-      'genre': [null, Validators.required],
-      'album': [null],
-      'dateCreation': [null, Validators.required],
-      'prix': [0, Validators.required],
-      'lyric': ['']
+      // Init data
+      this.artists.push(this.music.artiste);
+      this.genres.push(this.music.genre);
     });
   }
 
@@ -87,6 +91,24 @@ export class MusicCreateComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
+    this.form = this.fb.group({
+      'nom': [this.music?.nom, Validators.required],
+      'artiste': [this.music?.artiste, Validators.required],
+      'genre': [this.music?.genre, Validators.required],
+      'album': [this.music?.album],
+      'dateCreation': [this.music?.dateCreation, Validators.required],
+      'prix': [this.music?.prix || 0, Validators.required],
+      'lyric': [this.music?.lyric]
+    });
+
+    // set initial selection
+    this.artistServerSideCtrl.setValue(this.music?.artiste);
+    this.genreServerSideCtrl.setValue(this.music?.genre);
+
+    // load the initial list
+    this.filteredServerSideArtists.next(this.artists.slice());
+    this.filteredServerSideGenres.next(this.genres.slice());
+
     // listen for search field value changes
     this.artistServerSideFilteringCtrl.valueChanges
       .pipe(
@@ -122,17 +144,11 @@ export class MusicCreateComponent implements OnInit, OnDestroy {
         tap(() => this.searchingGenre = true),
         takeUntil(this._onDestroyGenre),
         debounceTime(200),
-        map(search => {
-          if (!this.genres) {
-            return [];
-          }
-          // simulate server fetching and filtering data
-          return this.genres.filter(genre => genre.nom.toLowerCase().indexOf(search) > -1);
-        }),
+        concatMap((search) => this.genreService.searchByName(search)),
         delay(500),
         takeUntil(this._onDestroyGenre)
       )
-      .subscribe(filteredGenres => {
+      .subscribe((filteredGenres: Genre[]) => {
           this.searchingGenre = false;
           this.filteredServerSideGenres.next(filteredGenres);
         },
@@ -201,6 +217,7 @@ export class MusicCreateComponent implements OnInit, OnDestroy {
     let reader = new FileReader();
     reader.addEventListener('load', () => this.audio.url = reader.result);
     reader.readAsDataURL(files[0]);
+    this.setNewAudio = true;
     this.audio.file = files[0];
   }
 
@@ -220,6 +237,7 @@ export class MusicCreateComponent implements OnInit, OnDestroy {
     let reader = new FileReader();
     reader.addEventListener('load', () => this.video.url = reader.result);
     reader.readAsDataURL(files[0]);
+    this.setNewVideo = true;
     this.video.file = files[0];
   }
 

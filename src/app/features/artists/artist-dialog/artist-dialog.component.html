@@ -1,6 +1,6 @@
 <h2 mat-dialog-title><strong>{{action}} un artiste</strong></h2>
 <mat-dialog-content  *ngIf="action != 'Supprimer'; else elseTemplate" class="button-container">
-  <form #userForm="ngForm" fxLayout="row wrap" fxFlexAlign="center" class="row"
+  <form #form="ngForm" fxLayout="row wrap" fxFlexAlign="center" class="row"
         [ngStyle]="{'opacity' : loading ? '30%' : '100%'}">
     <mat-form-field fxFlex.gt-sm="50" fxFlex="100" class="p-10">
       <input type="text" matInput required name="nom" [(ngModel)]="local_data.nom" placeholder="Noms">
@@ -16,14 +16,15 @@
       <input type="email" matInput name="email" placeholder="Email" [(ngModel)]="local_data.email">
     </mat-form-field>
 
-    <app-image-upload style="width: 100%" (file)="image = $event" [fileName]="local_data.imagePersonne"></app-image-upload>
+    <app-image-upload style="width: 100%" (file)="image = $event"
+                      [fileName]="local_data.imagePersonne"></app-image-upload>
   </form>
   <div class="spinner-container" *ngIf="loading">
     <mat-spinner diameter="50" color="primary"></mat-spinner>
   </div>
 </mat-dialog-content>
 <ng-template #elseTemplate>
-  Etes vous sûr de vouloir supprimer <b>{{local_data.nom}}</b>?
+  Etes vous sûr de vouloir supprimer <b>{{local_data.nom}}</b> ?
 </ng-template>
 <div mat-dialog-actions align="end">
   <button mat-button mat-flat-button color="accent" (click)="doAction()">{{action}}</button>

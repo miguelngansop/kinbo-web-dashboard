@@ -1,9 +1,11 @@
-<h2 mat-dialog-title><strong>{{action}} un genre musical</strong></h2>
+<h2 mat-dialog-title>
+  <strong>{{action == 'Details' ? 'Details sur ' + local_data.nom : action + 'un genre musical'}}</strong></h2>
 <mat-dialog-content *ngIf="action != 'Supprimer'; else elseTemplate" class="button-container">
   <form #userForm="ngForm" fxLayout="row wrap" fxFlexAlign="center" class="row"
         [ngStyle]="{'opacity' : loading ? '30%' : '100%'}">
     <mat-form-field fxFlex.gt-sm="100" fxFlex="100" class="p-10">
-      <input type="text" matInput required name="nom" [(ngModel)]="local_data.nom" placeholder="Nom">
+      <input type="text" matInput required name="nom" [(ngModel)]="local_data.nom" placeholder="Nom"
+             [disabled]="action == 'Details'">
     </mat-form-field>
 
     <app-image-upload style="width: 100%" (file)="image = $event" [fileName]="local_data.image"></app-image-upload>
@@ -16,6 +18,6 @@
   Etes vous sûr de vouloir supprimer <b>{{local_data.nom}}</b>?
 </ng-template>
 <div mat-dialog-actions align="end">
-  <button mat-button mat-flat-button color="accent" (click)="doAction()">{{action}}</button>
+  <button mat-button mat-flat-button color="accent" (click)="doAction()" *ngIf="action != 'Details'">{{action}}</button>
   <button mat-button (click)="closeDialog()" mat-flat-button color="warn">Annuler</button>
 </div>
