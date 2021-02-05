@@ -2,8 +2,8 @@
 // }
 import {AuthConfig} from 'angular-oauth2-oidc';
 
-export const API:string = 'http://localhost:8080';
-export const CURRENT_USER:string = 'kinbo-user';
+export const API: string = 'http://kinbo.tv:8080';
+export const CURRENT_USER: string = 'kinbo-user';
 export const CLIEND_ID:string = 'web-client';
 export const CLIENT_SECRET:string = 'AfWg7rtkZ7yMyxtw';
 export const OAUTH_CONFIG : AuthConfig = {
