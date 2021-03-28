@@ -2,7 +2,7 @@
 // }
 import {AuthConfig} from 'angular-oauth2-oidc';
 
-export const API:string = 'http://ec2-54-237-61-205.compute-1.amazonaws.com:8080';
+export const API:string = 'http://kinbo.tv:8080';
 export const CURRENT_USER:string = 'kinbo-user';
 export const CLIEND_ID:string = 'web-client';
 export const CLIENT_SECRET:string = 'AfWg7rtkZ7yMyxtw';
