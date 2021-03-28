@@ -76,7 +76,7 @@ export const AppRoutes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(AppRoutes, { onSameUrlNavigation: 'reload', relativeLinkResolution: 'legacy' })],
+  imports: [RouterModule.forRoot(AppRoutes, {onSameUrlNavigation: 'reload', relativeLinkResolution: 'legacy', useHash: true})],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

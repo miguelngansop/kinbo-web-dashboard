@@ -37,7 +37,7 @@ export class AlbumService {
   }
 
   add(album: Album) {
-    return this.http.post(API + '/albums', album);
+     return this.http.post(API + '/albums', album);
   }
 
 

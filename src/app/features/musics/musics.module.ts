@@ -9,7 +9,7 @@ import {MusicDialogComponent} from './music-dialog/music-dialog.component';
 import {QuillModule} from 'ngx-quill';
 import {SharedModule} from '../../shared/shared.module';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {FileUploadModule} from 'ng2-file-upload';
+// import {FileUploadModule} from 'ng2-file-upload';
 import {MatSelectModule} from '@angular/material/select';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {NgxMatSelectSearchModule} from 'ngx-mat-select-search';
@@ -25,7 +25,6 @@ import {PlyrModule} from 'ngx-plyr';
     QuillModule.forRoot(),
     SharedModule,
     FormsModule,
-    FileUploadModule,
     MatSelectModule,
     MatFormFieldModule,
     NgxMatSelectSearchModule,

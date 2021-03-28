@@ -23,7 +23,7 @@ import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
 import {OAuthModule} from 'angular-oauth2-oidc';
 import {ToastrModule} from 'ngx-toastr';
-import {registerLocaleData} from '@angular/common';
+import {HashLocationStrategy, LocationStrategy, registerLocaleData} from '@angular/common';
 import localeFrAt from '@angular/common/locales/fr';
 
 registerLocaleData(localeFrAt, 'fr');
@@ -65,7 +65,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
       provide: PERFECT_SCROLLBAR_CONFIG,
       useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG
     },
-    { provide: LOCALE_ID, useValue: 'fr' }
+    {provide: LOCALE_ID, useValue: 'fr'},
+    // [{provide: LocationStrategy, useClass: HashLocationStrategy}]
   ],
   bootstrap: [AppComponent]
 })
