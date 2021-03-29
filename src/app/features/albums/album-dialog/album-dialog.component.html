@@ -16,7 +16,7 @@
                                  [searching]="searchingArtist"></ngx-mat-select-search>
         </mat-option>
         <mat-option *ngFor="let artist of filteredServerSideArtists | async" [value]="artist">
-          {{artist?.nom + ' ' + artist?.prenom}}
+          {{artist?.nom + ' ' + (artist?.prenom || '')}}
         </mat-option>
       </mat-select>
     </mat-form-field>
@@ -39,6 +39,6 @@
   Etes vous sûr de vouloir supprimer <b>{{local_data.titre}}</b> ?
 </ng-template>
 <div mat-dialog-actions align="end">
-  <button mat-button mat-flat-button color="accent" type="submit" (click)="doAction()">{{action}}</button>
+  <button mat-button mat-flat-button color="accent" (click)="doAction()" [disabled]="loading">{{action}}</button>
   <button mat-button (click)="closeDialog()" mat-flat-button color="warn">Annuler</button>
 </div>

@@ -57,7 +57,9 @@ export class AlbumDialogComponent implements OnInit, OnDestroy {
 
     // Init data
     if (this.action == 'Modifier') {
-      this.artists.push(this.local_data.artiste);
+      if (this.local_data.artiste) {
+        this.artists.push(this.local_data.artiste);
+      }
     }
   }
 
@@ -100,7 +102,7 @@ export class AlbumDialogComponent implements OnInit, OnDestroy {
   }
 
   doAction() {
-    let album: Album = {id: this.local_data.id, ...this.form.value};
+    let album: Album = {id: this.local_data.id, image: this.local_data.image, ...this.form.value};
     this.loading = true;
     if (this.action == 'Ajouter') {
       let request$;

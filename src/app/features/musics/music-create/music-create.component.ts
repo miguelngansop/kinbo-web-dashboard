@@ -38,8 +38,8 @@ export class MusicCreateComponent implements OnInit, OnDestroy {
   form: FormGroup;
   title = 'Nouvelle musique';
 
-  setNewAudio: boolean = false;
-  setNewVideo: boolean = false;
+  setAudio: boolean = false;
+  setVideo: boolean = false;
 
   @ViewChild('artistSelect') artistSelect: MatSelect;
   @ViewChild('genreSelect') genreSelect: MatSelect;
@@ -54,8 +54,19 @@ export class MusicCreateComponent implements OnInit, OnDestroy {
 
       // Init data
       if (this.music) {
-        this.artists.push(this.music.artiste);
-        this.genres.push(this.music.genre);
+        if (this.music.artiste) {
+          this.artists.push(this.music.artiste);
+        }
+        if (this.music.genre) {
+          this.genres.push(this.music.genre);
+        }
+        if (this.music.album) {
+          this.albums.push(this.music.album);
+        }
+
+        this.setAudio = this.music.audioURL != null;
+        this.setVideo = this.music.videoURL != null
+
       }
 
     });
@@ -232,7 +243,7 @@ export class MusicCreateComponent implements OnInit, OnDestroy {
     let reader = new FileReader();
     reader.addEventListener('load', () => this.audio.url = reader.result);
     reader.readAsDataURL(files[0]);
-    this.setNewAudio = true;
+    this.setAudio = true;
     this.audio.file = files[0];
   }
 
@@ -252,7 +263,7 @@ export class MusicCreateComponent implements OnInit, OnDestroy {
     let reader = new FileReader();
     reader.addEventListener('load', () => this.video.url = reader.result);
     reader.readAsDataURL(files[0]);
-    this.setNewVideo = true;
+    this.setVideo = true;
     this.video.file = files[0];
   }
 

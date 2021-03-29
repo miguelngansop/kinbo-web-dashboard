@@ -79,7 +79,7 @@
             <ng-container matColumnDef="artist">
               <mat-header-cell *matHeaderCellDef mat-sort-header> Artist</mat-header-cell>
               <mat-cell
-                *matCellDef="let row"> {{row.artiste ? row.artiste.nom + ' ' + row.artiste.prenom : 'n/a'}} </mat-cell>
+                *matCellDef="let row"> {{row.artiste ? row.artiste.nom + ' ' + (row.artiste.prenom || '') : 'n/a'}} </mat-cell>
             </ng-container>
 
 
