@@ -11,8 +11,8 @@
           <table class="table">
             <thead>
             <tr>
-              <th></th>
-              <th></th>
+              <th width="20"></th>
+              <th width="80"></th>
             </tr>
             </thead>
             <tbody>
@@ -51,6 +51,36 @@
                 <strong>Date de sortie</strong>
               </td>
               <td>{{music.dateCreation | date:'longDate'}}</td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Audio URL</strong>
+              </td>
+              <td>
+                <ng-container *ngIf="music.audioURL">
+                  <i> {{ (music.audioURL.length > 30) ? (music.audioURL | slice:0:30) + '...' : (music.audioURL)}} </i>
+                  <button style="margin-left: 10px" mat-mini-fab color="accent" (click)="copyURL(music.audioURL)"
+                          matTooltip="Cliquez pour copier l'URL"
+                          aria-label="Button to copy URL">
+                    <mat-icon>content_copy</mat-icon>
+                  </button>
+                </ng-container>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Video URL</strong>
+              </td>
+              <td>
+                <ng-container *ngIf="music.videoURL">
+                  <i> {{ (music.videoURL.length > 30) ? (music.videoURL | slice:0:30) + '...' : (music.videoURL)}} </i>
+                  <button style="margin-left: 10px" mat-mini-fab color="accent" (click)="copyURL(music.videoURL)"
+                          matTooltip="Cliquez pour copier l'URL"
+                          aria-label="Button to copy URL">
+                    <mat-icon>content_copy</mat-icon>
+                  </button>
+                </ng-container>
+              </td>
             </tr>
             </tbody>
           </table>

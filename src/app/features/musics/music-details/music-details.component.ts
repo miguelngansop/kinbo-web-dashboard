@@ -7,6 +7,8 @@ import {ToastrService} from 'ngx-toastr';
 import {Music} from '../../../models/music';
 import {PlyrComponent} from 'ngx-plyr';
 import * as Plyr from 'plyr';
+import {Clipboard} from '@angular/cdk/clipboard';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-music-details',
@@ -29,7 +31,7 @@ export class MusicDetailsComponent implements OnInit {
   music: Music;
 
   constructor(private router: Router, private route: ActivatedRoute, private musicService: MusicService, breakpointObserver: BreakpointObserver,
-              private dialog: MatDialog, private toastr: ToastrService) {
+              private dialog: MatDialog, private toastr: ToastrService, private clipboard: Clipboard, private snackBar: MatSnackBar) {
     this.route.data.subscribe((data: { music: Music }) => {
       this.music = data.music;
       this.videoSources = [
@@ -50,6 +52,13 @@ export class MusicDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+
+  copyURL(url) {
+    this.clipboard.copy(url);
+    this.snackBar.open('Le lien a été copié', null, {
+      duration: 2000,
+    });
   }
 
   options: Plyr.Options = {

@@ -18,6 +18,7 @@ const routes: Routes = [
     component: MusicCreateComponent,
     data: {
       title: 'Ajouter une musique',
+      editMode: false
     }
   },
   {
@@ -42,6 +43,7 @@ const routes: Routes = [
         component: MusicCreateComponent,
         data: {
           title: 'Modifier une musique',
+          editMode: true
         },
         resolve: {
           music: MusicResolver

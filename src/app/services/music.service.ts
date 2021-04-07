@@ -37,17 +37,36 @@ export class MusicService {
   }
 
   addWithDetails(music: Music, image: File, imageHashCode: string, audio: File, audioHashCode: string, video: File, videoHashCode: string) {
-    let sources = [this.uploadService.saveFile(image, imageHashCode), this.uploadService.saveFile(audio, audioHashCode)];
-    if (video) {
-      sources.push(this.uploadService.saveFile(video, videoHashCode));
+    let sources = [];
+    let files = [];
+    if (image) {
+      sources.push(this.uploadService.saveFile(image, imageHashCode));
+      files.push('i');
     }
 
-    return forkJoin(sources).pipe(
+    if (audio) {
+      sources.push(this.uploadService.saveFile(audio, audioHashCode));
+      files.push('a');
+    }
+
+    if (video) {
+      sources.push(this.uploadService.saveFile(video, videoHashCode));
+      files.push('v');
+    }
+
+    return ((sources.length == 0) ? of([]) : forkJoin(sources)).pipe(
       concatMap((resp) => {
-          music.image = (<string>resp[0]).replace(/"/g, '');
-          music.audioURL = (<string>resp[1]).replace(/"/g, '');
+          if (image) {
+            let index = files.indexOf('i');
+            music.image = (<string>resp[index]).replace(/"/g, '');
+          }
+          if (audio) {
+            let index = files.indexOf('a');
+            music.audioURL = (<string>resp[index]).replace(/"/g, '');
+          }
           if (video) {
-            music.videoURL = (<string>resp[2]).replace(/"/g, '');
+            let index = files.indexOf('v');
+            music.videoURL = (<string>resp[index]).replace(/"/g, '');
           }
           return this.http.post(API + '/musiques', music);
         }
@@ -78,7 +97,7 @@ export class MusicService {
       return forkJoin(sources).pipe(
         concatMap((resp: any) => {
             music.streamURL = resp[0].live_stream.player_hls_playback_url;
-          music.streamID = resp[0].live_stream.id;
+            music.streamID = resp[0].live_stream.id;
             return this.update(music);
           }
         ));
@@ -88,6 +107,43 @@ export class MusicService {
 
   update(music: Music) {
     return merge(this.wowzaService.startStream(music.streamID), this.http.put(`${API}/musiques/${music.id}`, music, {responseType: 'text'}));
+  }
+
+  updateWithDetails(music: Music, image: File, imageHashCode: string, audio: File, audioHashCode: string, video: File, videoHashCode: string) {
+    let sources = [];
+    let files = [];
+    if (image) {
+      sources.push(this.uploadService.saveFile(image, imageHashCode));
+      files.push('i');
+    }
+
+    if (audio) {
+      sources.push(this.uploadService.saveFile(audio, audioHashCode));
+      files.push('a');
+    }
+
+    if (video) {
+      sources.push(this.uploadService.saveFile(video, videoHashCode));
+      files.push('v');
+    }
+
+    return ((sources.length == 0) ? of([]) : forkJoin(sources)).pipe(
+      concatMap((resp) => {
+          if (image) {
+            let index = files.indexOf('i');
+            music.image = (<string>resp[index]).replace(/"/g, '');
+          }
+          if (audio) {
+            let index = files.indexOf('a');
+            music.audioURL = (<string>resp[index]).replace(/"/g, '');
+          }
+          if (video) {
+            let index = files.indexOf('v');
+            music.videoURL = (<string>resp[index]).replace(/"/g, '');
+          }
+          return this.http.put(`${API}/musiques/${music.id}`, music);
+        }
+      ));
   }
 
   updateWithImage(music: Music, audio: File, audioHashCode: string, video: File, videoHashCode: string) {

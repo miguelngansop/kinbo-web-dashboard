@@ -40,17 +40,19 @@ export class MusicCreateComponent implements OnInit, OnDestroy {
 
   setAudio: boolean = false;
   setVideo: boolean = false;
+  editMode: boolean = false;
 
   @ViewChild('artistSelect') artistSelect: MatSelect;
   @ViewChild('genreSelect') genreSelect: MatSelect;
 
 
   constructor(private artistService: ArtistService, private genreService: GenreService, private musicService: MusicService,
-              private toastr: ToastrService, private  fb: FormBuilder, private router: Router, private route: ActivatedRoute,) {
+              private toastr: ToastrService, private fb: FormBuilder, private router: Router, private route: ActivatedRoute,) {
     // this.artistService.getAll().subscribe((data: Artist[]) => this.artists = data);
-    this.route.data.subscribe((data: { music: Music, title: string }) => {
+    this.route.data.subscribe((data: { music: Music, title: string, editMode: boolean }) => {
       this.music = data.music;
       this.title = data.title;
+      this.editMode = data.editMode;
 
       // Init data
       if (this.music) {
@@ -65,7 +67,7 @@ export class MusicCreateComponent implements OnInit, OnDestroy {
         }
 
         this.setAudio = this.music.audioURL != null;
-        this.setVideo = this.music.videoURL != null
+        this.setVideo = this.music.videoURL != null;
 
       }
 
@@ -190,7 +192,7 @@ export class MusicCreateComponent implements OnInit, OnDestroy {
 
   onSave() {
 
-    this.music = {...this.form.value};
+    let music = {...this.form.value};
     this.loading = true;
     let imageHashCode;
     if (this.image.url && this.image.file) {
@@ -207,24 +209,56 @@ export class MusicCreateComponent implements OnInit, OnDestroy {
       videoHashCode = Md5.hashAsciiStr(this.video.file.name + new Date()).toString();
     }
 
+    if (this.editMode) {
+      music.id = this.music.id;
+      music.audioURL = this.music.audioURL;
+      music.videoURL = this.music.videoURL;
+      music.image = this.music.image;
 
-    this.musicService.addWithDetails(this.music, this.image.file, imageHashCode, this.audio.file, audioHashCode, this.video.file, videoHashCode).subscribe((rep: Music) => {
-      if (rep) {
-        this.musicService.createLive(rep).subscribe(_ => {
-          this.toastr.success('Nouvelle muisque ajoutée', 'Operation réussie');
+      this.musicService.updateWithDetails(music, this.image.file, imageHashCode, this.audio.file, audioHashCode, this.video.file, videoHashCode).subscribe((rep: Music) => {
+        if (rep) {
+          if (this.music.audioURL != rep.audioURL) {
+            this.musicService.createLive(rep).subscribe(_ => {
+            }, error => {
+              this.loading = false;
+              console.log('create live error', error);
+              this.toastr.error(error.error, 'Erreur');
+            });
+          }
+
+          this.toastr.success('Musique mise à jour', 'Operation réussie');
+          this.router.navigateByUrl('/musics/' + this.music.id);
+          this.loading = false;
+        }
+      }, (err => {
+        console.log('Error', err);
+        this.toastr.error('Verifier vos champs', 'Erreur');
+        this.loading = false;
+      }));
+
+    } else {
+
+      this.musicService.addWithDetails(music, this.image.file, imageHashCode, this.audio.file, audioHashCode, this.video.file, videoHashCode).subscribe((rep: Music) => {
+        if (rep) {
+          this.musicService.createLive(rep).subscribe(_ => {
+          }, error => {
+            this.loading = false;
+            console.log('create live error', error);
+            this.toastr.error(error.error, 'Erreur');
+          });
+
+          this.toastr.success('Nouvelle musique ajoutée', 'Operation réussie');
           this.router.navigateByUrl('/musics');
           this.loading = false;
-        }, error => {
-          this.loading = false;
-          console.log('create live error', error);
-          this.toastr.error(error.error, 'Erreur');
-        });
-      }
-    }, (err => {
-      console.log('Error', err);
-      this.toastr.error('Verifier vos champs', 'Erreur');
-      this.loading = false;
-    }));
+        }
+      }, (err => {
+        console.log('Error', err);
+        this.toastr.error('Verifier vos champs', 'Erreur');
+        this.loading = false;
+      }));
+
+    }
+
   }
 
 
