@@ -112,7 +112,7 @@
   Etes vous sûr de vouloir supprimer <b>{{local_data.nom}}</b> ?
 </ng-template>
 <div mat-dialog-actions align="end">
-  <button mat-button mat-flat-button color="accent" (click)="doAction()" [disabled]="loading"
+  <button mat-button mat-flat-button color="accent" (click)="doAction()" [disabled]="loading || !form.valid"
           *ngIf="action != 'Afficher'">{{action}}</button>
   <button mat-button (click)="closeDialog()" mat-flat-button color="warn">Annuler</button>
 </div>
