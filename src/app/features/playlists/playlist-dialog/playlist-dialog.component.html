@@ -1,7 +1,9 @@
 <h2 mat-dialog-title><strong>{{action}} une playlist</strong></h2>
-<mat-dialog-content *ngIf="action != 'Supprimer'; else elseTemplate" class="button-container">
-  <form #form="ngForm" fxLayout="row wrap" fxLayoutAlign="center" class="row"
-        [ngStyle]="{'opacity' : loading ? '30%' : '100%'}">
+<form #form="ngForm">
+  <mat-dialog-content *ngIf="action != 'Supprimer'; else elseTemplate" class="button-container" fxLayout="row wrap"
+                      fxLayoutAlign="center" class="row"
+                      [ngStyle]="{'opacity' : loading ? '30%' : '100%'}">
+
     <mat-form-field fxFlex.gt-sm="70" fxFlex="100" class="p-10">
       <input type="text" matInput required name="nom" [(ngModel)]="local_data.nom" placeholder="Nom">
     </mat-form-field>
@@ -103,16 +105,17 @@
                   [(ngModel)]="local_data.isprivate">
       Privée
     </mat-checkbox>
-  </form>
-  <div class="spinner-container" *ngIf="loading">
-    <mat-spinner diameter="50" color="primary"></mat-spinner>
+
+    <div class="spinner-container" *ngIf="loading">
+      <mat-spinner diameter="50" color="primary"></mat-spinner>
+    </div>
+  </mat-dialog-content>
+  <ng-template #elseTemplate>
+    Etes vous sûr de vouloir supprimer <b>{{local_data.nom}}</b> ?
+  </ng-template>
+  <div mat-dialog-actions align="end">
+    <button mat-button mat-flat-button color="accent" (click)="doAction()" [disabled]="loading || !form.valid"
+            *ngIf="action != 'Afficher'">{{action}}</button>
+    <button mat-button (click)="closeDialog()" mat-flat-button color="warn">Annuler</button>
   </div>
-</mat-dialog-content>
-<ng-template #elseTemplate>
-  Etes vous sûr de vouloir supprimer <b>{{local_data.nom}}</b> ?
-</ng-template>
-<div mat-dialog-actions align="end">
-  <button mat-button mat-flat-button color="accent" (click)="doAction()" [disabled]="loading || !form.valid"
-          *ngIf="action != 'Afficher'">{{action}}</button>
-  <button mat-button (click)="closeDialog()" mat-flat-button color="warn">Annuler</button>
-</div>
+</form>
